@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Bot67 {
     public static void main(String[] args) {
         String banner =  "_____       ___    __  ______\n"
@@ -29,9 +31,23 @@ public class Bot67 {
         System.out.println("Hello! I'm Bot67.");
         System.out.println("What can I do for you?");
         System.out.println("____________________________________________________________");
-        System.out.println("6767676767676767");
-        System.out.println(sixSeven);
-        System.out.println("Bye. Hope to see you again soon. Six seven!");
-        System.out.println("____________________________________________________________");
+
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+            String command = scanner.nextLine();
+            System.out.println("____________________________________________________________");
+
+            if (command.equals("bye")) {
+                System.out.println("67676767676767676767676767676767676767");
+                System.out.println(sixSeven);
+                System.out.println("Bye. Hope to see you again soon. Six Seven!");
+                System.out.println("____________________________________________________________");
+                break;
+            }
+
+            System.out.println(command);
+            System.out.println("____________________________________________________________");
+        }
+
     }
 }
