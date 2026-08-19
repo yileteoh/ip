@@ -61,6 +61,13 @@ public class Bot67 {
 
                 System.out.println("Six seven! I've marked this task as done:");
                 System.out.println("  [X] " + tasks[taskIndex]);
+            } else if (command.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(command.substring(7));
+                int taskIndex = taskNumber - 1;
+                isDone[taskIndex] = false;
+
+                System.out.println("Six seven! I've marked this task as not done yet:");
+                System.out.println("  [ ] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
