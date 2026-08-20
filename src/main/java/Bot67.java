@@ -40,6 +40,7 @@ public class Bot67 {
             String command = scanner.nextLine();
             System.out.println("____________________________________________________________");
 
+            try {
             if (command.equals("bye")) {
                 System.out.println("67676767676767676767676767676767676767");
                 System.out.println(sixSeven);
@@ -52,21 +53,28 @@ public class Bot67 {
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println((i + 1) + "." + tasks[i].getDescription());
                 }
+            } else if (command.equals("todo")) {
+                throw new Bot67Exception("A todo description cannot be empty.");
+            } else if (command.equals("deadline")) {
+                throw new Bot67Exception("Use: deadline <description> /by <date or time>.");
+            } else if (command.equals("event")) {
+                throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
             } else if (command.startsWith("mark ")) {
-                int taskNumber = Integer.parseInt(command.substring(5));
+                int taskNumber = parseTaskNumber(command.substring(5));
                 int taskIndex = taskNumber - 1;
                 tasks[taskIndex].mark();
 
                 System.out.println("Six seven! I've marked this task as done:");
                 System.out.println("  [X] " + tasks[taskIndex].getName());
             } else if (command.startsWith("unmark ")) {
-                int taskNumber = Integer.parseInt(command.substring(7));
+                int taskNumber = parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
                 tasks[taskIndex].unmark();
 
                 System.out.println("Six seven! I've marked this task as not done yet:");
                 System.out.println("  [ ] " + tasks[taskIndex].getName());
             } else if (command.startsWith("todo ")) {
+                requireText(command.substring(5));
                 tasks[taskCount] = new Todo(command);
                 taskCount++;
 
@@ -74,6 +82,7 @@ public class Bot67 {
                 System.out.println("  " + tasks[taskCount - 1].getDescription());
                 System.out.println("You have " + taskCount + " tasks in the list. 67!");
             } else if (command.startsWith("deadline ")) {
+                requireValidDeadline(command);
                 tasks[taskCount] = new Deadline(command);
                 taskCount++;
 
@@ -81,6 +90,7 @@ public class Bot67 {
                 System.out.println("  " + tasks[taskCount - 1].getDescription());
                 System.out.println("You have " + taskCount + " tasks in the list. 67!");
             } else if (command.startsWith("event ")) {
+                requireValidEvent(command);
                 tasks[taskCount] = new Event(command);
                 taskCount++;
 
@@ -88,16 +98,50 @@ public class Bot67 {
                 System.out.println("  " + tasks[taskCount - 1].getDescription());
                 System.out.println("You have " + taskCount + " tasks in the list. 67!");
             } else {
-                tasks[taskCount] = new Task(command);
-                taskCount++;
+                throw new Bot67Exception("I do not recognize that command.");
+            }
 
-                System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1].getDescription());
-                System.out.println("You have " + taskCount + " tasks in the list. 67!");
+            } catch (Bot67Exception e) {
+                System.out.println("SIX SEVEN! " + e.getMessage());
+            } catch (RuntimeException e) {
+                System.out.println("SIX SEVEN! I could not process that command. Please check its format.");
             }
 
             System.out.println("____________________________________________________________");
         }
 
+    }
+
+    private static int parseTaskNumber(String value) throws Bot67Exception {
+        try {
+            int taskNumber = Integer.parseInt(value.trim());
+            if (taskNumber < 1 || taskNumber > 100) {
+                throw new Bot67Exception("Task number must be between 1 and 100.");
+            }
+            return taskNumber;
+        } catch (NumberFormatException e) {
+            throw new Bot67Exception("Task number must be a whole number.");
+        }
+    }
+
+    private static void requireText(String text) throws Bot67Exception {
+        if (text.trim().isEmpty()) {
+            throw new Bot67Exception("A todo description cannot be empty.");
+        }
+    }
+
+    private static void requireValidDeadline(String command) throws Bot67Exception {
+        int marker = command.indexOf(" /by ");
+        if (marker <= 9 || command.substring(marker + 5).trim().isEmpty()) {
+            throw new Bot67Exception("Use: deadline <description> /by <date or time>.");
+        }
+    }
+
+    private static void requireValidEvent(String command) throws Bot67Exception {
+        int from = command.indexOf(" /from ");
+        int to = command.indexOf(" /to ");
+        if (from <= 6 || to <= from + 7 || command.substring(to + 5).trim().isEmpty()) {
+            throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
+        }
     }
 }

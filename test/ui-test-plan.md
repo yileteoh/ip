@@ -51,3 +51,51 @@ Expected output checkpoints, in order:
 ```
 
 Console record: passed. The `mark 2` and `unmark 2` confirmations appeared, and the final `list` showed task 2 as `[D][ ]` with its deadline preserved.
+
+## Test 3: Required Level-5 errors
+
+Aim: Verify that empty todos and unknown commands produce errors without terminating the application.
+
+Input commands:
+
+```text
+todo
+blah
+todo valid task
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! A todo description cannot be empty.
+SIX SEVEN! I do not recognize that command.
+1.[T][ ] valid task
+```
+
+## Test 4: Malformed commands and invalid task numbers
+
+Aim: Verify that malformed Level-4 commands and invalid task numbers are handled safely.
+
+Input commands:
+
+```text
+deadline
+event meeting
+mark abc
+unmark 0
+todo valid task
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Use: deadline <description> /by <date or time>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Task number must be a whole number.
+SIX SEVEN! Task number must be between 1 and 100.
+1.[T][ ] valid task
+```
