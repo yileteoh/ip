@@ -1,9 +1,11 @@
 public class Task {
     private final String name;
+    private final TaskType type;
     private boolean isDone;
 
-    public Task(String name) {
+    public Task(String name, TaskType type) {
         this.name = name;
+        this.type = type;
         this.isDone = false;
     }
 
@@ -23,7 +25,11 @@ public class Task {
         return this.name;
     }
 
+    public TaskType getType() {
+        return this.type;
+    }
+
     public String getDescription(){
-        return "[T][" + this.getStatusIcon() + "] " + this.getName();
+        return "[" + this.getType().getSymbol() + "][" + this.getStatusIcon() + "] " + this.getName();
     }
 }
