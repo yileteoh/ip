@@ -99,3 +99,78 @@ SIX SEVEN! Task number must be a whole number.
 SIX SEVEN! Task number must be between 1 and 100.
 1.[T][ ] valid task
 ```
+
+## Test 5: Delete a task and renumber the list
+
+Aim: Verify that deleting a task removes the correct typed task and shifts later tasks forward.
+
+Input commands:
+
+```text
+todo borrow book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+delete 2
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+Six seven. I've removed this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in the list.
+1.[T][ ] borrow book
+2.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+```
+
+## Test 6: Invalid delete commands
+
+Aim: Verify that malformed and out-of-range delete commands do not terminate the application.
+
+Input commands:
+
+```text
+delete
+delete abc
+delete 0
+todo valid task
+delete 2
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! I do not recognize that command.
+SIX SEVEN! Task number must be a whole number.
+SIX SEVEN! Task number must be between 1 and 100.
+SIX SEVEN! Task number is out of range.
+1.[T][ ] valid task
+```
+
+## Test 7: Delete a completed task
+
+Aim: Verify that deleting a completed typed task reports its completed status and leaves the other task unchanged.
+
+Input commands:
+
+```text
+todo read book
+event project meeting /from Mon 2pm /to 4pm
+mark 2
+delete 2
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+Six seven. I've removed this task:
+  [E][X] project meeting (from: Mon 2pm to: 4pm)
+Now you have 1 tasks in the list.
+1.[T][ ] read book
+```

@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Bot67 {
     public static void main(String[] args) {
@@ -26,8 +27,7 @@ public class Bot67 {
                 + "⠀⠀⠀⠀⠱⠄⣀⢜⢁⡠⠥⠊⠀⠀⠀⠀⠡⡘⡄⠐⡂⠘⢌⡀⠉⠂⡸⠀⠀⠀\n"
                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(banner);
         System.out.println("____________________________________________________________");
@@ -50,8 +50,8 @@ public class Bot67 {
             }
 
             if (command.equals("list")) {
-                for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + "." + tasks[i].getDescription());
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + "." + tasks.get(i).getDescription());
                 }
             } else if (command.equals("todo")) {
                 throw new Bot67Exception("A todo description cannot be empty.");
@@ -62,41 +62,48 @@ public class Bot67 {
             } else if (command.startsWith("mark ")) {
                 int taskNumber = parseTaskNumber(command.substring(5));
                 int taskIndex = taskNumber - 1;
-                tasks[taskIndex].mark();
+                tasks.get(taskIndex).mark();
 
                 System.out.println("Six seven! I've marked this task as done:");
-                System.out.println("  [X] " + tasks[taskIndex].getName());
+                System.out.println("  [X] " + tasks.get(taskIndex).getName());
             } else if (command.startsWith("unmark ")) {
                 int taskNumber = parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
-                tasks[taskIndex].unmark();
+                tasks.get(taskIndex).unmark();
 
                 System.out.println("Six seven! I've marked this task as not done yet:");
-                System.out.println("  [ ] " + tasks[taskIndex].getName());
+                System.out.println("  [ ] " + tasks.get(taskIndex).getName());
+            } else if (command.startsWith("delete ")) {
+                int taskNumber = parseTaskNumber(command.substring(7));
+                int taskIndex = taskNumber - 1;
+                if (taskIndex >= tasks.size()) {
+                    throw new Bot67Exception("Task number is out of range.");
+                }
+                Task deletedTask = tasks.remove(taskIndex);
+                System.out.println("Six seven. I've removed this task:");
+                System.out.println("  " + deletedTask.getDescription());
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (command.startsWith("todo ")) {
                 requireText(command.substring(5));
-                tasks[taskCount] = new Todo(command);
-                taskCount++;
+                tasks.add(new Todo(command));
 
                 System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1].getDescription());
-                System.out.println("You have " + taskCount + " tasks in the list. 67!");
+                System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
+                System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else if (command.startsWith("deadline ")) {
                 requireValidDeadline(command);
-                tasks[taskCount] = new Deadline(command);
-                taskCount++;
+                tasks.add(new Deadline(command));
 
                 System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1].getDescription());
-                System.out.println("You have " + taskCount + " tasks in the list. 67!");
+                System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
+                System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else if (command.startsWith("event ")) {
                 requireValidEvent(command);
-                tasks[taskCount] = new Event(command);
-                taskCount++;
+                tasks.add(new Event(command));
 
                 System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks[taskCount - 1].getDescription());
-                System.out.println("You have " + taskCount + " tasks in the list. 67!");
+                System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
+                System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else {
                 throw new Bot67Exception("I do not recognize that command.");
             }
