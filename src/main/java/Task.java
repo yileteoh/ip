@@ -1,5 +1,5 @@
 public class Task {
-    private String name;
+    private final String name;
     private boolean isDone;
 
     public Task(String name) {
@@ -21,5 +21,9 @@ public class Task {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getDescription(){
+        return "[T][" + this.getStatusIcon() + "] " + this.getName();
     }
 }
