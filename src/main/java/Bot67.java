@@ -27,6 +27,7 @@ public class Bot67 {
                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
         Task[] tasks = new Task[100];
+        char[] status = new char[100];
         int taskCount = 0;
 
         System.out.println(banner);
@@ -50,7 +51,8 @@ public class Bot67 {
 
             if (command.equals("list")) {
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].getName());
+                    System.out.println((i + 1) + ".[" + status[i] + "][" + tasks[i].getStatusIcon() + "] "
+                                        + tasks[i].getName());
                 }
             } else if (command.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(command.substring(5));
@@ -66,10 +68,44 @@ public class Bot67 {
 
                 System.out.println("Six seven! I've marked this task as not done yet:");
                 System.out.println("  [ ] " + tasks[taskIndex].getName());
+            } else if (command.startsWith("todo ")) {
+                String taskName = command.substring(5);
+                tasks[taskCount] = new Task(taskName);
+                status[taskCount] = 'T';
+                taskCount++;
+
+                System.out.println("Six seven! I've added this task:");
+                System.out.println("  [T][ ] " + taskName);
+                System.out.println("You have " + taskCount + " tasks in the list. 67!");
+            } else if (command.startsWith("deadline ")) {
+                String taskName = command.substring(9, command.indexOf(" /by "));
+                String deadline = command.substring(command.indexOf(" /by ") + 5);
+                tasks[taskCount] = new Task(taskName + " (by: " + deadline + ")");
+                status[taskCount] = 'D';
+                taskCount++;
+
+                System.out.println("Six seven! I've added this task:");
+                System.out.println("  [D][ ] " + taskName + " (by: " + deadline + ")");
+                System.out.println("You have " + taskCount + " tasks in the list. 67!");
+            } else if (command.startsWith("event ")) {
+                String taskName = command.substring(6, command.indexOf(" /from "));
+                String from = command.substring(command.indexOf(" /from ") + 7,  command.indexOf(" /to "));
+                String to = command.substring(command.indexOf(" /to ") + 5);
+                tasks[taskCount] = new Task(taskName + " (from: " + from + " to: " + to + ")");
+                status[taskCount] = 'E';
+                taskCount++;
+
+                System.out.println("Six seven! I've added this task:");
+                System.out.println("  [E][ ] " + taskName + " (from: " + from + " to: " + to + ")");
+                System.out.println("You have " + taskCount + " tasks in the list. 67!");
             } else {
                 tasks[taskCount] = new Task(command);
+                status[taskCount] = 'T';
                 taskCount++;
-                System.out.println("added: " + command);
+
+                System.out.println("Six seven! I've added this task:");
+                System.out.println("  [T][ ] " + command);
+                System.out.println("You have " + taskCount + " tasks in the list. 67!");
             }
 
             System.out.println("____________________________________________________________");
