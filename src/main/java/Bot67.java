@@ -36,32 +36,26 @@ public class Bot67 {
                 + "⠀⠀⠀⠀⠱⠄⣀⢜⢁⡠⠥⠊⠀⠀⠀⠀⠡⡘⡄⠐⡂⠘⢌⡀⠉⠂⡸⠀⠀⠀\n"
                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
+        Ui ui = new Ui();
         Storage storage = new Storage();
         ArrayList<Task> tasks;
         try {
             tasks = storage.load();
         } catch (IOException e) {
             tasks = new ArrayList<>();
-            System.out.println("SIX SEVEN! I could not load the saved tasks. Starting with an empty list.");
+            ui.showError("I could not load the saved tasks. Starting with an empty list.");
         }
 
-        System.out.println(banner);
-        System.out.println("____________________________________________________________");
-        System.out.println("Hello! I'm Bot67.");
-        System.out.println("What can I do for you?");
-        System.out.println("____________________________________________________________");
+        ui.showWelcome(banner);
 
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
-            System.out.println("____________________________________________________________");
+            ui.showSeparator();
 
             try {
             if (command.equals("bye")) {
-                System.out.println("67676767676767676767676767676767676767");
-                System.out.println(sixSeven);
-                System.out.println("Bye. Hope to see you again soon. Six Seven!");
-                System.out.println("____________________________________________________________");
+                ui.showGoodbye(sixSeven);
                 break;
             }
 
@@ -131,12 +125,12 @@ public class Bot67 {
             }
 
             } catch (Bot67Exception e) {
-                System.out.println("SIX SEVEN! " + e.getMessage());
+                ui.showError(e.getMessage());
             } catch (RuntimeException e) {
-                System.out.println("SIX SEVEN! I could not process that command. Please check its format.");
+                ui.showError("I could not process that command. Please check its format.");
             }
 
-            System.out.println("____________________________________________________________");
+            ui.showSeparator();
         }
 
     }
