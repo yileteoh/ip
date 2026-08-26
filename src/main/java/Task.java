@@ -50,6 +50,11 @@ public class Task {
         return this.type;
     }
 
+    /** Returns the task in the format used by the save file. */
+    public String toFileFormat() {
+        return this.type.getSymbol() + " | " + (this.isDone ? "1" : "0") + " | " + this.name;
+    }
+
     /**
      * Returns the standard display description for this task.
      *

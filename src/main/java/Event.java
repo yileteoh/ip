@@ -20,4 +20,9 @@ public class Event extends Task {
     public String getDescription() {
         return super.getDescription() + " (from: " + from + " to: " + to + ")";
     }
+
+    @Override
+    public String toFileFormat() {
+        return super.toFileFormat() + " | " + from + " | " + to;
+    }
 }

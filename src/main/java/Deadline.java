@@ -18,4 +18,9 @@ public class Deadline extends Task {
     public String getDescription() {
         return super.getDescription() + " (by: " + deadline + ")";
     }
+
+    @Override
+    public String toFileFormat() {
+        return super.toFileFormat() + " | " + deadline;
+    }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -35,7 +36,14 @@ public class Bot67 {
                 + "⠀⠀⠀⠀⠱⠄⣀⢜⢁⡠⠥⠊⠀⠀⠀⠀⠡⡘⡄⠐⡂⠘⢌⡀⠉⠂⡸⠀⠀⠀\n"
                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage();
+        ArrayList<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (IOException e) {
+            tasks = new ArrayList<>();
+            System.out.println("SIX SEVEN! I could not load the saved tasks. Starting with an empty list.");
+        }
 
         System.out.println(banner);
         System.out.println("____________________________________________________________");
@@ -71,6 +79,7 @@ public class Bot67 {
                 int taskNumber = parseTaskNumber(command.substring(5));
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).mark();
+                saveTasks(storage, tasks);
 
                 System.out.println("Six seven! I've marked this task as done:");
                 System.out.println("  [X] " + tasks.get(taskIndex).getName());
@@ -78,6 +87,7 @@ public class Bot67 {
                 int taskNumber = parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
                 tasks.get(taskIndex).unmark();
+                saveTasks(storage, tasks);
 
                 System.out.println("Six seven! I've marked this task as not done yet:");
                 System.out.println("  [ ] " + tasks.get(taskIndex).getName());
@@ -88,12 +98,14 @@ public class Bot67 {
                     throw new Bot67Exception("Task number is out of range.");
                 }
                 Task deletedTask = tasks.remove(taskIndex);
+                saveTasks(storage, tasks);
                 System.out.println("Six seven. I've removed this task:");
                 System.out.println("  " + deletedTask.getDescription());
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (command.startsWith("todo ")) {
                 requireText(command.substring(5));
                 tasks.add(new Todo(command));
+                saveTasks(storage, tasks);
 
                 System.out.println("Six seven! I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
@@ -101,6 +113,7 @@ public class Bot67 {
             } else if (command.startsWith("deadline ")) {
                 requireValidDeadline(command);
                 tasks.add(new Deadline(command));
+                saveTasks(storage, tasks);
 
                 System.out.println("Six seven! I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
@@ -108,6 +121,7 @@ public class Bot67 {
             } else if (command.startsWith("event ")) {
                 requireValidEvent(command);
                 tasks.add(new Event(command));
+                saveTasks(storage, tasks);
 
                 System.out.println("Six seven! I've added this task:");
                 System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
@@ -157,6 +171,14 @@ public class Bot67 {
         int to = command.indexOf(" /to ");
         if (from <= 6 || to <= from + 7 || command.substring(to + 5).trim().isEmpty()) {
             throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
+        }
+    }
+
+    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+        try {
+            storage.save(tasks);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
