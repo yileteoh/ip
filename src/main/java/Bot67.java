@@ -1,7 +1,15 @@
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+/**
+ * Runs the Bot67 command-line task manager.
+ */
 public class Bot67 {
+    /**
+     * Starts the command-line interface and processes user commands.
+     *
+     * @param args command-line arguments, which are not used
+     */
     public static void main(String[] args) {
         String banner =  "_____       ___    __  ______\n"
                 + "| __ )  ___ | |_  / /  |___  |\n"

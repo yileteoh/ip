@@ -1,6 +1,14 @@
-public class Todo extends Task{
+/**
+ * Represents a task without a deadline or event time.
+ */
+public class Todo extends Task {
 
-    public Todo(String command){
+    /**
+     * Creates a ToDo task from a user command.
+     *
+     * @param command the complete ToDo command
+     */
+    public Todo(String command) {
         super(command.substring(5), TaskType.TODO);
     }
 
