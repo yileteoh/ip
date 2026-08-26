@@ -1,3 +1,7 @@
+package bot67.task;
+
+import bot67.parser.DateTimeParser;
+
 /**
  * Represents a task that must be completed by a specified date or time.
  */

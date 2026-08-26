@@ -1,3 +1,9 @@
+package bot67.parser;
+
+import bot67.storage.Storage;
+import bot67.task.TaskList;
+import bot67.ui.Ui;
+
 /**
  * Command that terminates the Bot67 session.
  */

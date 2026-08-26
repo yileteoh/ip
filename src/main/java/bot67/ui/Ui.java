@@ -1,3 +1,5 @@
+package bot67.ui;
+
 /**
  * Handles output for Bot67's command-line interface.
  */

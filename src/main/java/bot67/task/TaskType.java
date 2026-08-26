@@ -1,3 +1,5 @@
+package bot67.task;
+
 /**
  * Represents the supported task types and their display symbols.
  */

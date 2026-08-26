@@ -1,3 +1,7 @@
+package bot67.parser;
+
+import bot67.exception.Bot67Exception;
+
 /**
  * Interprets and validates the parts of commands that require parsing.
  */

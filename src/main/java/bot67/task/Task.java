@@ -1,3 +1,5 @@
+package bot67.task;
+
 /**
  * Represents a task stored by Bot67.
  */

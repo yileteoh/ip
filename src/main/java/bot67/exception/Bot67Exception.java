@@ -1,3 +1,5 @@
+package bot67.exception;
+
 /**
  * Represents an expected error while processing a Bot67 command.
  */

@@ -1,3 +1,5 @@
+package bot67.task;
+
 /**
  * Represents a task without a deadline or event time.
  */

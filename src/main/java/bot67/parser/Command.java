@@ -1,3 +1,9 @@
+package bot67.parser;
+
+import bot67.storage.Storage;
+import bot67.task.TaskList;
+import bot67.ui.Ui;
+
 /**
  * Represents a user command that can be executed by Bot67.
  */

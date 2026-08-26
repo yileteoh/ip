@@ -1,8 +1,15 @@
+package bot67.storage;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
+
+import bot67.task.Deadline;
+import bot67.task.Event;
+import bot67.task.Task;
+import bot67.task.Todo;
 
 /** Writes Bot67 tasks to the local save file. */
 public class Storage {

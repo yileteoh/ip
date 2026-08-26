@@ -1,5 +1,18 @@
+package bot67;
+
 import java.io.IOException;
 import java.util.Scanner;
+
+import bot67.exception.Bot67Exception;
+import bot67.parser.Command;
+import bot67.parser.Parser;
+import bot67.storage.Storage;
+import bot67.task.Deadline;
+import bot67.task.Event;
+import bot67.task.Task;
+import bot67.task.TaskList;
+import bot67.task.Todo;
+import bot67.ui.Ui;
 
 /**
  * Runs the Bot67 command-line task manager.

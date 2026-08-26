@@ -1,3 +1,5 @@
+package bot67.task;
+
 import java.util.ArrayList;
 import java.util.List;
 

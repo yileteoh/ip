@@ -1,3 +1,7 @@
+package bot67.task;
+
+import bot67.parser.DateTimeParser;
+
 /**
  * Represents a task that occurs during a specified time interval.
  */
