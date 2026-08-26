@@ -4,6 +4,10 @@
 public class Event extends Task {
     private final String from;
     private final String to;
+    private final java.time.LocalDateTime fromDateTime;
+    private final java.time.LocalDateTime toDateTime;
+    private final boolean fromHasTime;
+    private final boolean toHasTime;
 
     /**
      * Creates an event task from a user command.
@@ -14,15 +18,37 @@ public class Event extends Task {
         super(command.substring(6, command.indexOf(" /from ")), TaskType.EVENT);
         this.from = command.substring(command.indexOf(" /from ") + 7,  command.indexOf(" /to "));
         this.to = command.substring(command.indexOf(" /to ") + 5);
+        this.fromDateTime = parseOrNull(from);
+        this.toDateTime = parseOrNull(to);
+        this.fromHasTime = hasTime(from);
+        this.toHasTime = hasTime(to);
     }
 
     @Override
     public String getDescription() {
-        return super.getDescription() + " (from: " + from + " to: " + to + ")";
+        String formattedFrom = fromDateTime == null ? from : DateTimeParser.format(fromDateTime, fromHasTime);
+        String formattedTo = toDateTime == null ? to : DateTimeParser.format(toDateTime, toHasTime);
+        return super.getDescription() + " (from: " + formattedFrom + " to: " + formattedTo + ")";
     }
 
     @Override
     public String toFileFormat() {
-        return super.toFileFormat() + " | " + from + " | " + to;
+        String savedFrom = fromDateTime == null ? from
+                : (fromHasTime ? fromDateTime.toString() : fromDateTime.toLocalDate().toString());
+        String savedTo = toDateTime == null ? to
+                : (toHasTime ? toDateTime.toString() : toDateTime.toLocalDate().toString());
+        return super.toFileFormat() + " | " + savedFrom + " | " + savedTo;
+    }
+
+    private static java.time.LocalDateTime parseOrNull(String value) {
+        try {
+            return DateTimeParser.parse(value);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    private static boolean hasTime(String value) {
+        return value.matches("\\d{4}-\\d{2}-\\d{2}.*\\d{2}:\\d{2}");
     }
 }
