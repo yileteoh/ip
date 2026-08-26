@@ -164,6 +164,7 @@ public class Bot67 {
         if (marker <= 9 || command.substring(marker + 5).trim().isEmpty()) {
             throw new Bot67Exception("Use: deadline <description> /by <date or time>.");
         }
+        validateDateTime(command.substring(marker + 5), "deadline");
     }
 
     private static void requireValidEvent(String command) throws Bot67Exception {
@@ -171,6 +172,19 @@ public class Bot67 {
         int to = command.indexOf(" /to ");
         if (from <= 6 || to <= from + 7 || command.substring(to + 5).trim().isEmpty()) {
             throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
+        }
+        validateDateTime(command.substring(from + 7, to), "event");
+        validateDateTime(command.substring(to + 5), "event");
+    }
+
+    private static void validateDateTime(String value, String commandType) throws Bot67Exception {
+        try {
+            DateTimeParser.parse(value.trim());
+        } catch (RuntimeException e) {
+            // Keep Level 7's free-form values working, while parsing ISO values as Level 8 dates.
+            if (value.trim().matches("\\d{4}-\\d{2}-\\d{2}.*")) {
+                throw new Bot67Exception("Invalid " + commandType + " date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.");
+            }
         }
     }
 

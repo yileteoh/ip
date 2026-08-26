@@ -195,3 +195,23 @@ You have 1 tasks in the list. 67!
 ```
 
 Console record: passed. The application created `data/duke.txt` with the saved task.
+
+## Test 9: Parse and display Level-8 dates and times
+
+Aim: Verify that ISO dates and date-times are parsed into date/time values, displayed in a user-friendly format, and saved in a reloadable format.
+
+Input commands:
+
+```text
+deadline submit report /by 2026-10-15
+event project meeting /from 2026-10-15T14:00 /to 2026-10-15T16:30
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+1.[D][ ] submit report (by: Oct 15 2026)
+2.[E][ ] project meeting (from: Oct 15 2026 14:00 to: Oct 15 2026 16:30)
+```
