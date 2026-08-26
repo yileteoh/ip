@@ -53,6 +53,7 @@ public class Parser {
         validateDateTime(command.substring(to + 5), "event");
     }
 
+    /** Validates ISO date/time input while allowing free-form Level 7 values. */
     private void validateDateTime(String value, String commandType) throws Bot67Exception {
         try {
             DateTimeParser.parse(value.trim());

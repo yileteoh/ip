@@ -48,6 +48,7 @@ public class Task {
         return this.name;
     }
 
+    /** Returns this task's type. */
     public TaskType getType() {
         return this.type;
     }

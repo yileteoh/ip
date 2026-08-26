@@ -48,6 +48,7 @@ public class Storage {
         return tasks;
     }
 
+    /** Converts one saved line into a task, ignoring malformed records. */
     private Task parseTask(String line) {
         String[] parts = line.split("\\s+\\|\\s+", -1);
         try {
@@ -68,6 +69,7 @@ public class Storage {
         return null;
     }
 
+    /** Applies a saved completion status to a newly created task. */
     private Task createTask(String command, String status, Task task) {
         if (status.equals("1")) {
             task.mark();

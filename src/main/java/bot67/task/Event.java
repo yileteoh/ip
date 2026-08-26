@@ -28,6 +28,7 @@ public class Event extends Task {
         this.toHasTime = hasTime(to);
     }
 
+    /** Returns the task description including its event interval. */
     @Override
     public String getDescription() {
         String formattedFrom = fromDateTime == null ? from : DateTimeParser.format(fromDateTime, fromHasTime);
@@ -35,6 +36,7 @@ public class Event extends Task {
         return super.getDescription() + " (from: " + formattedFrom + " to: " + formattedTo + ")";
     }
 
+    /** Returns the task in save-file format, preserving parsed date values. */
     @Override
     public String toFileFormat() {
         String savedFrom = fromDateTime == null ? from
@@ -44,6 +46,7 @@ public class Event extends Task {
         return super.toFileFormat() + " | " + savedFrom + " | " + savedTo;
     }
 
+    /** Parses a date/time value, returning null for free-form input. */
     private static java.time.LocalDateTime parseOrNull(String value) {
         try {
             return DateTimeParser.parse(value);
@@ -52,6 +55,7 @@ public class Event extends Task {
         }
     }
 
+    /** Checks whether an ISO date/time string includes an explicit time. */
     private static boolean hasTime(String value) {
         return value.matches("\\d{4}-\\d{2}-\\d{2}.*\\d{2}:\\d{2}");
     }

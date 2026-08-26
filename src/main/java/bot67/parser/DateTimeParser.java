@@ -11,6 +11,7 @@ public final class DateTimeParser {
     private static final DateTimeFormatter DISPLAY_DATE_TIME = DateTimeFormatter.ofPattern("MMM d yyyy HH:mm");
     private static final DateTimeFormatter INPUT_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    /** Prevents construction of this utility class. */
     private DateTimeParser() {
         // Utility class; do not instantiate.
     }

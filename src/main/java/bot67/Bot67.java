@@ -149,6 +149,7 @@ public class Bot67 {
 
     }
 
+    /** Persists the current tasks and converts storage failures into application errors. */
     private static void saveTasks(Storage storage, java.util.List<Task> tasks) {
         try {
             storage.save(tasks);

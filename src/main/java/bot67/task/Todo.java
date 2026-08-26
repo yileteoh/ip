@@ -14,6 +14,7 @@ public class Todo extends Task {
         super(command.substring(5), TaskType.TODO);
     }
 
+    /** Returns the standard ToDo task description. */
     @Override
     public String getDescription(){
         return super.getDescription();
