@@ -54,12 +54,13 @@ public class Bot67 {
             ui.showSeparator();
 
             try {
-            if (command.equals("bye")) {
-                ui.showGoodbye(sixSeven);
-                break;
-            }
-
-            if (command.equals("list")) {
+            Command parsedCommand = parser.parse(command, sixSeven);
+            if (parsedCommand != null) {
+                parsedCommand.execute(tasks, ui, storage);
+                if (parsedCommand.isExit()) {
+                    break;
+                }
+            } else if (command.equals("list")) {
                 for (int i = 1; i <= tasks.size(); i++) {
                     System.out.println(i + "." + tasks.get(i).getDescription());
                 }

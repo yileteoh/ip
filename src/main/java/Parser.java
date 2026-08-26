@@ -2,6 +2,13 @@
  * Interprets and validates the parts of commands that require parsing.
  */
 public class Parser {
+    /** Converts the exit command into its command object. Other commands are not handled yet. */
+    public Command parse(String fullCommand, String personalityArt) throws Bot67Exception {
+        if (fullCommand.equals("bye")) {
+            return new ExitCommand(personalityArt);
+        }
+        return null;
+    }
     /** Parses a one-based task number and validates its allowed range. */
     public int parseTaskNumber(String value) throws Bot67Exception {
         try {
