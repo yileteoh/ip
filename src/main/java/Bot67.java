@@ -36,8 +36,14 @@ public class Bot67 {
                 + "⠀⠀⠀⠀⠱⠄⣀⢜⢁⡠⠥⠊⠀⠀⠀⠀⠡⡘⡄⠐⡂⠘⢌⡀⠉⠂⡸⠀⠀⠀\n"
                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
-        ArrayList<Task> tasks = new ArrayList<>();
         Storage storage = new Storage();
+        ArrayList<Task> tasks;
+        try {
+            tasks = storage.load();
+        } catch (IOException e) {
+            tasks = new ArrayList<>();
+            System.out.println("SIX SEVEN! I could not load the saved tasks. Starting with an empty list.");
+        }
 
         System.out.println(banner);
         System.out.println("____________________________________________________________");

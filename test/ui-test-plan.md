@@ -193,3 +193,5 @@ Six seven! I've added this task:
   [T][ ] read book
 You have 1 tasks in the list. 67!
 ```
+
+Console record: passed. The application created `data/duke.txt` with the saved task.
