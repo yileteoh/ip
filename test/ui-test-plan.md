@@ -174,3 +174,22 @@ Six seven. I've removed this task:
 Now you have 1 tasks in the list.
 1.[T][ ] read book
 ```
+
+## Test 8: Save tasks after a change
+
+Aim: Verify that adding a task still completes normally while the task is written to `data/duke.txt`.
+
+Input commands:
+
+```text
+todo read book
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+Six seven! I've added this task:
+  [T][ ] read book
+You have 1 tasks in the list. 67!
+```
