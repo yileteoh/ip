@@ -16,7 +16,7 @@ public class Todo extends Task {
 
     /** Returns the standard ToDo task description. */
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return super.getDescription();
     }
 }
