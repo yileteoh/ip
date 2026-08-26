@@ -30,12 +30,14 @@ public class Deadline extends Task {
         this.hasTime = this.deadline.matches("\\d{4}-\\d{2}-\\d{2}.*\\d{2}:\\d{2}");
     }
 
+    /** Returns the task description including its deadline. */
     @Override
     public String getDescription() {
         return super.getDescription() + " (by: " + (parsedDateTime
                 ? DateTimeParser.format(deadlineDateTime, hasTime) : deadline) + ")";
     }
 
+    /** Returns the task in save-file format, preserving parsed date values. */
     @Override
     public String toFileFormat() {
         String savedDeadline = parsedDateTime
