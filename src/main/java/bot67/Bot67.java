@@ -85,7 +85,6 @@ public class Bot67 {
                 throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
             } else if (command.startsWith("mark ")) {
                 int taskNumber = parser.parseTaskNumber(command.substring(5));
-                int taskIndex = taskNumber - 1;
                 tasks.mark(taskNumber);
                 saveTasks(storage, tasks.asList());
 
@@ -93,7 +92,6 @@ public class Bot67 {
                 System.out.println("  [X] " + tasks.get(taskNumber).getName());
             } else if (command.startsWith("unmark ")) {
                 int taskNumber = parser.parseTaskNumber(command.substring(7));
-                int taskIndex = taskNumber - 1;
                 tasks.unmark(taskNumber);
                 saveTasks(storage, tasks.asList());
 
@@ -101,7 +99,6 @@ public class Bot67 {
                 System.out.println("  [ ] " + tasks.get(taskNumber).getName());
             } else if (command.startsWith("delete ")) {
                 int taskNumber = parser.parseTaskNumber(command.substring(7));
-                int taskIndex = taskNumber - 1;
                 if (taskNumber > tasks.size()) {
                     throw new Bot67Exception("Task number is out of range.");
                 }
