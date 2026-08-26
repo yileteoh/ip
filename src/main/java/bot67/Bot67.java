@@ -77,6 +77,18 @@ public class Bot67 {
                 for (int i = 1; i <= tasks.size(); i++) {
                     System.out.println(i + "." + tasks.get(i).getDescription());
                 }
+            } else if (command.startsWith("find ")) {
+                String keyword = command.substring(5).trim();
+                if (keyword.isEmpty()) {
+                    throw new Bot67Exception("Use: find <keyword>.");
+                }
+
+                System.out.println("Six seven! Here are the matching tasks in your list:");
+                for (int i = 1; i <= tasks.size(); i++) {
+                    if (tasks.get(i).getDescription().contains(keyword)) {
+                        System.out.println(i + "." + tasks.get(i).getDescription());
+                    }
+                }
             } else if (command.equals("todo")) {
                 throw new Bot67Exception("A todo description cannot be empty.");
             } else if (command.equals("deadline")) {
