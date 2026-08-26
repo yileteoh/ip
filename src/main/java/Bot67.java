@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -38,11 +37,11 @@ public class Bot67 {
 
         Ui ui = new Ui();
         Storage storage = new Storage();
-        ArrayList<Task> tasks;
+        TaskList tasks;
         try {
-            tasks = storage.load();
+            tasks = new TaskList(storage.load());
         } catch (IOException e) {
-            tasks = new ArrayList<>();
+            tasks = new TaskList(java.util.List.of());
             ui.showError("I could not load the saved tasks. Starting with an empty list.");
         }
 
@@ -60,8 +59,8 @@ public class Bot67 {
             }
 
             if (command.equals("list")) {
-                for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println((i + 1) + "." + tasks.get(i).getDescription());
+                for (int i = 1; i <= tasks.size(); i++) {
+                    System.out.println(i + "." + tasks.get(i).getDescription());
                 }
             } else if (command.equals("todo")) {
                 throw new Bot67Exception("A todo description cannot be empty.");
@@ -72,53 +71,53 @@ public class Bot67 {
             } else if (command.startsWith("mark ")) {
                 int taskNumber = parseTaskNumber(command.substring(5));
                 int taskIndex = taskNumber - 1;
-                tasks.get(taskIndex).mark();
-                saveTasks(storage, tasks);
+                tasks.mark(taskNumber);
+                saveTasks(storage, tasks.asList());
 
                 System.out.println("Six seven! I've marked this task as done:");
-                System.out.println("  [X] " + tasks.get(taskIndex).getName());
+                System.out.println("  [X] " + tasks.get(taskNumber).getName());
             } else if (command.startsWith("unmark ")) {
                 int taskNumber = parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
-                tasks.get(taskIndex).unmark();
-                saveTasks(storage, tasks);
+                tasks.unmark(taskNumber);
+                saveTasks(storage, tasks.asList());
 
                 System.out.println("Six seven! I've marked this task as not done yet:");
-                System.out.println("  [ ] " + tasks.get(taskIndex).getName());
+                System.out.println("  [ ] " + tasks.get(taskNumber).getName());
             } else if (command.startsWith("delete ")) {
                 int taskNumber = parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
-                if (taskIndex >= tasks.size()) {
+                if (taskNumber > tasks.size()) {
                     throw new Bot67Exception("Task number is out of range.");
                 }
-                Task deletedTask = tasks.remove(taskIndex);
-                saveTasks(storage, tasks);
+                Task deletedTask = tasks.delete(taskNumber);
+                saveTasks(storage, tasks.asList());
                 System.out.println("Six seven. I've removed this task:");
                 System.out.println("  " + deletedTask.getDescription());
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (command.startsWith("todo ")) {
                 requireText(command.substring(5));
                 tasks.add(new Todo(command));
-                saveTasks(storage, tasks);
+                saveTasks(storage, tasks.asList());
 
                 System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
+                System.out.println("  " + tasks.get(tasks.size()).getDescription());
                 System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else if (command.startsWith("deadline ")) {
                 requireValidDeadline(command);
                 tasks.add(new Deadline(command));
-                saveTasks(storage, tasks);
+                saveTasks(storage, tasks.asList());
 
                 System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
+                System.out.println("  " + tasks.get(tasks.size()).getDescription());
                 System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else if (command.startsWith("event ")) {
                 requireValidEvent(command);
                 tasks.add(new Event(command));
-                saveTasks(storage, tasks);
+                saveTasks(storage, tasks.asList());
 
                 System.out.println("Six seven! I've added this task:");
-                System.out.println("  " + tasks.get(tasks.size() - 1).getDescription());
+                System.out.println("  " + tasks.get(tasks.size()).getDescription());
                 System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else {
                 throw new Bot67Exception("I do not recognize that command.");
@@ -182,7 +181,7 @@ public class Bot67 {
         }
     }
 
-    private static void saveTasks(Storage storage, ArrayList<Task> tasks) {
+    private static void saveTasks(Storage storage, java.util.List<Task> tasks) {
         try {
             storage.save(tasks);
         } catch (IOException e) {
