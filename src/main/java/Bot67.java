@@ -36,6 +36,7 @@ public class Bot67 {
                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
         Ui ui = new Ui();
+        Parser parser = new Parser();
         Storage storage = new Storage();
         TaskList tasks;
         try {
@@ -69,7 +70,7 @@ public class Bot67 {
             } else if (command.equals("event")) {
                 throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
             } else if (command.startsWith("mark ")) {
-                int taskNumber = parseTaskNumber(command.substring(5));
+                int taskNumber = parser.parseTaskNumber(command.substring(5));
                 int taskIndex = taskNumber - 1;
                 tasks.mark(taskNumber);
                 saveTasks(storage, tasks.asList());
@@ -77,7 +78,7 @@ public class Bot67 {
                 System.out.println("Six seven! I've marked this task as done:");
                 System.out.println("  [X] " + tasks.get(taskNumber).getName());
             } else if (command.startsWith("unmark ")) {
-                int taskNumber = parseTaskNumber(command.substring(7));
+                int taskNumber = parser.parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
                 tasks.unmark(taskNumber);
                 saveTasks(storage, tasks.asList());
@@ -85,7 +86,7 @@ public class Bot67 {
                 System.out.println("Six seven! I've marked this task as not done yet:");
                 System.out.println("  [ ] " + tasks.get(taskNumber).getName());
             } else if (command.startsWith("delete ")) {
-                int taskNumber = parseTaskNumber(command.substring(7));
+                int taskNumber = parser.parseTaskNumber(command.substring(7));
                 int taskIndex = taskNumber - 1;
                 if (taskNumber > tasks.size()) {
                     throw new Bot67Exception("Task number is out of range.");
@@ -96,7 +97,7 @@ public class Bot67 {
                 System.out.println("  " + deletedTask.getDescription());
                 System.out.println("Now you have " + tasks.size() + " tasks in the list.");
             } else if (command.startsWith("todo ")) {
-                requireText(command.substring(5));
+                parser.requireText(command.substring(5));
                 tasks.add(new Todo(command));
                 saveTasks(storage, tasks.asList());
 
@@ -104,7 +105,7 @@ public class Bot67 {
                 System.out.println("  " + tasks.get(tasks.size()).getDescription());
                 System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else if (command.startsWith("deadline ")) {
-                requireValidDeadline(command);
+                parser.requireValidDeadline(command);
                 tasks.add(new Deadline(command));
                 saveTasks(storage, tasks.asList());
 
@@ -112,7 +113,7 @@ public class Bot67 {
                 System.out.println("  " + tasks.get(tasks.size()).getDescription());
                 System.out.println("You have " + tasks.size() + " tasks in the list. 67!");
             } else if (command.startsWith("event ")) {
-                requireValidEvent(command);
+                parser.requireValidEvent(command);
                 tasks.add(new Event(command));
                 saveTasks(storage, tasks.asList());
 
@@ -132,53 +133,6 @@ public class Bot67 {
             ui.showSeparator();
         }
 
-    }
-
-    private static int parseTaskNumber(String value) throws Bot67Exception {
-        try {
-            int taskNumber = Integer.parseInt(value.trim());
-            if (taskNumber < 1 || taskNumber > 100) {
-                throw new Bot67Exception("Task number must be between 1 and 100.");
-            }
-            return taskNumber;
-        } catch (NumberFormatException e) {
-            throw new Bot67Exception("Task number must be a whole number.");
-        }
-    }
-
-    private static void requireText(String text) throws Bot67Exception {
-        if (text.trim().isEmpty()) {
-            throw new Bot67Exception("A todo description cannot be empty.");
-        }
-    }
-
-    private static void requireValidDeadline(String command) throws Bot67Exception {
-        int marker = command.indexOf(" /by ");
-        if (marker <= 9 || command.substring(marker + 5).trim().isEmpty()) {
-            throw new Bot67Exception("Use: deadline <description> /by <date or time>.");
-        }
-        validateDateTime(command.substring(marker + 5), "deadline");
-    }
-
-    private static void requireValidEvent(String command) throws Bot67Exception {
-        int from = command.indexOf(" /from ");
-        int to = command.indexOf(" /to ");
-        if (from <= 6 || to <= from + 7 || command.substring(to + 5).trim().isEmpty()) {
-            throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
-        }
-        validateDateTime(command.substring(from + 7, to), "event");
-        validateDateTime(command.substring(to + 5), "event");
-    }
-
-    private static void validateDateTime(String value, String commandType) throws Bot67Exception {
-        try {
-            DateTimeParser.parse(value.trim());
-        } catch (RuntimeException e) {
-            // Keep Level 7's free-form values working, while parsing ISO values as Level 8 dates.
-            if (value.trim().matches("\\d{4}-\\d{2}-\\d{2}.*")) {
-                throw new Bot67Exception("Invalid " + commandType + " date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.");
-            }
-        }
     }
 
     private static void saveTasks(Storage storage, java.util.List<Task> tasks) {
