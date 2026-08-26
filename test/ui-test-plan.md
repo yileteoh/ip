@@ -215,3 +215,27 @@ Expected output checkpoints, in order:
 1.[D][ ] submit report (by: Oct 15 2026)
 2.[E][ ] project meeting (from: Oct 15 2026 14:00 to: Oct 15 2026 16:30)
 ```
+
+## Test 10: Find tasks by keyword
+
+Aim: Verify that `find` displays matching tasks with their original list numbers and reports no matching tasks without crashing.
+
+Input commands:
+
+```text
+todo read book
+deadline return book /by Sunday
+event project meeting /from Mon 2pm /to 4pm
+find book
+find dinner
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+Six seven! Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Sunday)
+Six seven! Here are the matching tasks in your list:
+```
