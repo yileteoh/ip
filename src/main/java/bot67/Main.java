@@ -1,21 +1,29 @@
 package bot67;
 
+import java.io.IOException;
+
+import bot67.gui.MainWindow;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-/**
- * Displays the JavaFX interface for Bot67.
- */
+/** Provides Bot67's JavaFX entry point and loads the FXML-based main window. */
 public class Main extends Application {
-    /** Creates and displays the primary application window. */
+    private final Bot67 bot = new Bot67();
+
+    /** Creates and displays the main application window. */
     @Override
-    public void start(Stage stage) {
-        Label greeting = new Label("Hello from Bot67!");
-        Scene scene = new Scene(greeting, 400, 600);
+    public void start(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/view/MainWindow.fxml"));
+        AnchorPane root = loader.load();
+        loader.<MainWindow>getController().setBot(bot);
+
+        stage.setScene(new Scene(root));
         stage.setTitle("Bot67");
-        stage.setScene(scene);
+        stage.setMinHeight(500);
+        stage.setMinWidth(420);
         stage.show();
     }
 }
