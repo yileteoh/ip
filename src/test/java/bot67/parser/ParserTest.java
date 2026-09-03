@@ -5,8 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import bot67.exception.Bot67Exception;
 import org.junit.jupiter.api.Test;
+
+import bot67.exception.Bot67Exception;
 
 class ParserTest {
     private final Parser parser = new Parser();
