@@ -20,7 +20,7 @@ public class Event extends Task {
      */
     public Event(String command) {
         super(command.substring(6, command.indexOf(" /from ")), TaskType.EVENT);
-        this.from = command.substring(command.indexOf(" /from ") + 7,  command.indexOf(" /to "));
+        this.from = command.substring(command.indexOf(" /from ") + 7, command.indexOf(" /to "));
         this.to = command.substring(command.indexOf(" /to ") + 5);
         this.fromDateTime = parseOrNull(from);
         this.toDateTime = parseOrNull(to);

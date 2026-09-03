@@ -6,10 +6,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
 import bot67.storage.Storage;
 import bot67.task.TaskList;
 import bot67.ui.Ui;
-import org.junit.jupiter.api.Test;
 
 class ExitCommandTest {
     @Test
