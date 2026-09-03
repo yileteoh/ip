@@ -156,13 +156,13 @@ public class Bot67 {
         if (isDone) {
             tasks.mark(taskNumber);
             saveTasks();
-            ui.showLine("Six seven! I've marked this task as done:");
-            ui.showLine("  [X] " + tasks.get(taskNumber).getName());
+            ui.showLine("Six seven! I've marked this task as done:",
+                    "  [X] " + tasks.get(taskNumber).getName());
         } else {
             tasks.unmark(taskNumber);
             saveTasks();
-            ui.showLine("Six seven! I've marked this task as not done yet:");
-            ui.showLine("  [ ] " + tasks.get(taskNumber).getName());
+            ui.showLine("Six seven! I've marked this task as not done yet:",
+                    "  [ ] " + tasks.get(taskNumber).getName());
         }
     }
 
@@ -174,18 +174,18 @@ public class Bot67 {
         }
         Task deletedTask = tasks.delete(taskNumber);
         saveTasks();
-        ui.showLine("Six seven. I've removed this task:");
-        ui.showLine("  " + deletedTask.getDescription());
-        ui.showLine("Now you have " + tasks.size() + " tasks in the list.");
+        ui.showLine("Six seven. I've removed this task:",
+                "  " + deletedTask.getDescription(),
+                "Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /** Adds and saves one task. */
     private void addTask(Task task, Ui ui) {
         tasks.add(task);
         saveTasks();
-        ui.showLine("Six seven! I've added this task:");
-        ui.showLine("  " + task.getDescription());
-        ui.showLine("You have " + tasks.size() + " tasks in the list. 67!");
+        ui.showLine("Six seven! I've added this task:",
+                "  " + task.getDescription(),
+                "You have " + tasks.size() + " tasks in the list. 67!");
     }
 
     /** Loads saved tasks, falling back to an empty list if reading fails. */
