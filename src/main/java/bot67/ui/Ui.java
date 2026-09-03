@@ -46,8 +46,10 @@ public class Ui {
         output.println("SIX SEVEN! " + message);
     }
 
-    /** Displays one line of normal application output. */
-    public void showLine(String message) {
-        output.println(message);
+    /** Displays one or more lines of normal application output in the supplied order. */
+    public void showLine(String... messages) {
+        for (String message : messages) {
+            output.println(message);
+        }
     }
 }

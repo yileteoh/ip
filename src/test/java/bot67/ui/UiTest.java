@@ -17,11 +17,13 @@ class UiTest {
             Ui ui = new Ui();
             ui.showWelcome("banner");
             ui.showError("problem");
+            ui.showLine("first line", "second line");
             ui.showGoodbye("art");
             String text = output.toString();
             assertTrue(text.contains("banner"));
             assertTrue(text.contains("Hello! I'm Bot67."));
             assertTrue(text.contains("SIX SEVEN! problem"));
+            assertTrue(text.contains("first line" + System.lineSeparator() + "second line"));
             assertTrue(text.contains("art"));
         } finally {
             System.setOut(original);
