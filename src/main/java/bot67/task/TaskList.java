@@ -11,17 +11,27 @@ public class TaskList {
 
     /** Creates a task list containing the supplied tasks. */
     public TaskList(List<Task> tasks) {
+        assert tasks != null : "Initial task list must not be null";
+        assert tasks.stream().noneMatch(task -> task == null) : "Initial task list must not contain null tasks";
         this.tasks = new ArrayList<>(tasks);
     }
 
     /** Adds a task to the end of the list. */
     public void add(Task task) {
+        assert task != null : "Task to add must not be null";
+        int originalSize = tasks.size();
         tasks.add(task);
+        assert tasks.size() == originalSize + 1 : "Adding a task must increase the list size by one";
     }
 
     /** Removes and returns the task at the one-based position. */
     public Task delete(int taskNumber) {
-        return tasks.remove(taskNumber - 1);
+        assert isValidTaskNumber(taskNumber) : "Task number to delete must be within the list";
+        int originalSize = tasks.size();
+        Task deletedTask = tasks.remove(taskNumber - 1);
+        assert deletedTask != null : "Deleted task must not be null";
+        assert tasks.size() == originalSize - 1 : "Deleting a task must decrease the list size by one";
+        return deletedTask;
     }
 
     /** Marks the task at the one-based position as done. */
@@ -47,5 +57,10 @@ public class TaskList {
     /** Returns the tasks for persistence. */
     public List<Task> asList() {
         return tasks;
+    }
+
+    /** Returns whether the one-based task number identifies an existing task. */
+    private boolean isValidTaskNumber(int taskNumber) {
+        return taskNumber >= 1 && taskNumber <= tasks.size();
     }
 }
