@@ -26,6 +26,20 @@ class TaskListTest {
     }
 
     @Test
+    void sortByName_mixedCaseNames_sortsCaseInsensitivelyAndPreservesTasks() {
+        Todo zebra = new Todo("todo zebra");
+        Todo apple = new Todo("todo Apple");
+        Todo banana = new Todo("todo banana");
+        TaskList list = new TaskList(List.of(zebra, apple, banana));
+
+        list.sortByName();
+
+        assertEquals(apple, list.get(1));
+        assertEquals(banana, list.get(2));
+        assertEquals(zebra, list.get(3));
+    }
+
+    @Test
     void constructor_nullTaskList_throwsAssertionError() {
         assertThrows(AssertionError.class, () -> new TaskList(null));
     }

@@ -109,6 +109,8 @@ public class Bot67 {
     private void executeTaskCommand(String command, Ui ui) throws Bot67Exception {
         if (command.equals("list")) {
             showList(ui);
+        } else if (command.equals("sort")) {
+            sortTasks(ui);
         } else if (command.startsWith("find ")) {
             showFindResults(command, ui);
         } else if (isIncompleteAddCommand(command)) {
@@ -157,6 +159,14 @@ public class Bot67 {
         IntStream.rangeClosed(1, tasks.size())
                 .mapToObj(taskNumber -> taskNumber + "." + tasks.get(taskNumber).getDescription())
                 .forEach(ui::showLine);
+    }
+
+    /** Sorts tasks alphabetically, saves the new order, and displays it. */
+    private void sortTasks(Ui ui) {
+        tasks.sortByName();
+        saveTasks();
+        ui.showLine("Six seven! I've sorted your tasks alphabetically:");
+        showList(ui);
     }
 
     /** Displays tasks containing the requested keyword. */
