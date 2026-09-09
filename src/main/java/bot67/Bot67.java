@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 import bot67.exception.Bot67Exception;
 import bot67.parser.Command;
@@ -153,9 +154,9 @@ public class Bot67 {
 
     /** Displays every task in its numbered position. */
     private void showList(Ui ui) {
-        for (int i = 1; i <= tasks.size(); i++) {
-            ui.showLine(i + "." + tasks.get(i).getDescription());
-        }
+        IntStream.rangeClosed(1, tasks.size())
+                .mapToObj(taskNumber -> taskNumber + "." + tasks.get(taskNumber).getDescription())
+                .forEach(ui::showLine);
     }
 
     /** Displays tasks containing the requested keyword. */
@@ -165,11 +166,10 @@ public class Bot67 {
             throw new Bot67Exception("Use: find <keyword>.");
         }
         ui.showLine("Six seven! Here are the matching tasks in your list:");
-        for (int i = 1; i <= tasks.size(); i++) {
-            if (tasks.get(i).getDescription().contains(keyword)) {
-                ui.showLine(i + "." + tasks.get(i).getDescription());
-            }
-        }
+        IntStream.rangeClosed(1, tasks.size())
+                .filter(taskNumber -> tasks.get(taskNumber).getDescription().contains(keyword))
+                .mapToObj(taskNumber -> taskNumber + "." + tasks.get(taskNumber).getDescription())
+                .forEach(ui::showLine);
     }
 
     /** Marks or unmarks the task at the supplied position. */
