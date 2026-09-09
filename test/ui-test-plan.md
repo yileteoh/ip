@@ -239,3 +239,27 @@ Six seven! Here are the matching tasks in your list:
 2.[D][ ] return book (by: Sunday)
 Six seven! Here are the matching tasks in your list:
 ```
+
+## Test 11: Sort tasks alphabetically
+
+Aim: Verify that `sort` orders mixed task types by description without losing their status or date information.
+
+Input commands:
+
+```text
+todo zebra task
+deadline Apple task /by 2026-10-15
+event banana task /from Mon 2pm /to 4pm
+mark 3
+sort
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+Six seven! I've sorted your tasks alphabetically:
+1.[D][ ] Apple task (by: Oct 15 2026)
+2.[E][X] banana task (from: Mon 2pm to: 4pm)
+3.[T][ ] zebra task
+```

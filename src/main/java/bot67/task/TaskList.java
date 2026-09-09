@@ -1,6 +1,7 @@
 package bot67.task;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -42,6 +43,11 @@ public class TaskList {
     /** Marks the task at the one-based position as not done. */
     public void unmark(int taskNumber) {
         get(taskNumber).unmark();
+    }
+
+    /** Sorts tasks alphabetically by name without changing their contents. */
+    public void sortByName() {
+        tasks.sort(Comparator.comparing(Task::getName, String.CASE_INSENSITIVE_ORDER));
     }
 
     /** Returns the task at the one-based position. */

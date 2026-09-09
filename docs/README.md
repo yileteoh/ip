@@ -1,10 +1,20 @@
 # Bot67 User Guide
 
-// Update the title above to match the actual product name
+Bot67 is a desktop task manager that accepts short text commands. It stores your tasks between sessions.
 
-// Product screenshot goes here
+## Sorting tasks
 
-// Product intro goes here
+Enter `sort` to arrange all tasks alphabetically by their descriptions. Sorting is case-insensitive, keeps each
+task's type, completion status, and date information, and saves the new order.
+
+Example: `sort`
+
+```text
+Six seven! I've sorted your tasks alphabetically:
+1.[D][ ] Apple task (by: Oct 15 2026)
+2.[E][X] banana task (from: Mon 2pm to: 4pm)
+3.[T][ ] zebra task
+```
 
 ## Adding deadlines
 
