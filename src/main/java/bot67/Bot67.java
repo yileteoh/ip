@@ -94,38 +94,60 @@ public class Bot67 {
             if (parsedCommand != null) {
                 parsedCommand.execute(tasks, ui, storage);
                 exitRequested = parsedCommand.isExit();
-            } else if (command.equals("list")) {
-                showList(ui);
-            } else if (command.startsWith("find ")) {
-                showFindResults(command, ui);
-            } else if (command.equals("todo")) {
-                throw new Bot67Exception("A todo description cannot be empty.");
-            } else if (command.equals("deadline")) {
-                throw new Bot67Exception("Use: deadline <description> /by <date or time>.");
-            } else if (command.equals("event")) {
-                throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
-            } else if (command.startsWith("mark ")) {
-                changeTaskStatus(command.substring(5), true, ui);
-            } else if (command.startsWith("unmark ")) {
-                changeTaskStatus(command.substring(7), false, ui);
-            } else if (command.startsWith("delete ")) {
-                deleteTask(command.substring(7), ui);
-            } else if (command.startsWith("todo ")) {
-                parser.requireText(command.substring(5));
-                addTask(new Todo(command), ui);
-            } else if (command.startsWith("deadline ")) {
-                parser.requireValidDeadline(command);
-                addTask(new Deadline(command), ui);
-            } else if (command.startsWith("event ")) {
-                parser.requireValidEvent(command);
-                addTask(new Event(command), ui);
             } else {
-                throw new Bot67Exception("I do not recognize that command.");
+                executeTaskCommand(command, ui);
             }
         } catch (Bot67Exception e) {
             ui.showError(e.getMessage());
         } catch (RuntimeException e) {
             ui.showError("I could not process that command. Please check its format.");
+        }
+    }
+
+    /** Executes commands that are not represented by a {@link Command} object yet. */
+    private void executeTaskCommand(String command, Ui ui) throws Bot67Exception {
+        if (command.equals("list")) {
+            showList(ui);
+        } else if (command.startsWith("find ")) {
+            showFindResults(command, ui);
+        } else if (isIncompleteAddCommand(command)) {
+            rejectIncompleteAddCommand(command);
+        } else if (command.startsWith("mark ")) {
+            changeTaskStatus(command.substring(5), true, ui);
+        } else if (command.startsWith("unmark ")) {
+            changeTaskStatus(command.substring(7), false, ui);
+        } else if (command.startsWith("delete ")) {
+            deleteTask(command.substring(7), ui);
+        } else if (command.startsWith("todo ")) {
+            parser.requireText(command.substring(5));
+            addTask(new Todo(command), ui);
+        } else if (command.startsWith("deadline ")) {
+            parser.requireValidDeadline(command);
+            addTask(new Deadline(command), ui);
+        } else if (command.startsWith("event ")) {
+            parser.requireValidEvent(command);
+            addTask(new Event(command), ui);
+        } else {
+            throw new Bot67Exception("I do not recognize that command.");
+        }
+    }
+
+    /** Returns whether an add command is missing all required arguments. */
+    private boolean isIncompleteAddCommand(String command) {
+        return command.equals("todo") || command.equals("deadline") || command.equals("event");
+    }
+
+    /** Reports the command-specific usage message for an incomplete add command. */
+    private void rejectIncompleteAddCommand(String command) throws Bot67Exception {
+        switch (command) {
+            case "todo":
+                throw new Bot67Exception("A todo description cannot be empty.");
+            case "deadline":
+                throw new Bot67Exception("Use: deadline <description> /by <date or time>.");
+            case "event":
+                throw new Bot67Exception("Use: event <description> /from <start> /to <end>.");
+            default:
+                throw new IllegalArgumentException("Expected an incomplete add command: " + command);
         }
     }
 
