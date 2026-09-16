@@ -10,10 +10,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 
 /** Represents one chat message and its speaker's avatar. */
 public class DialogBox extends HBox {
@@ -34,6 +36,13 @@ public class DialogBox extends HBox {
         dialog.setText(text);
         displayPicture.setImage(image);
         cropToSquare(image);
+        displayPicture.setFitWidth(44);
+        displayPicture.setFitHeight(44);
+        Rectangle clip = new Rectangle(44, 44);
+        clip.setArcWidth(14);
+        clip.setArcHeight(14);
+        displayPicture.setClip(clip);
+        dialog.maxWidthProperty().bind(widthProperty().subtract(70).multiply(0.85));
     }
 
     /** Creates a right-aligned user message. */
@@ -45,7 +54,22 @@ public class DialogBox extends HBox {
     public static DialogBox getBotDialog(String text, Image image) {
         DialogBox box = new DialogBox(text, image);
         box.flip();
+        box.dialog.maxWidthProperty().unbind();
+        box.dialog.maxWidthProperty().bind(box.widthProperty().subtract(70));
         return box;
+    }
+
+    /** Adds a textual cue as well as color to distinguish failed commands. */
+    public void highlightError() {
+        dialog.setText("Check your command\n" + dialog.getText());
+        dialog.getStyleClass().add("error-label");
+    }
+
+    /** Places font-independent personality art below the welcome text. */
+    public void showPersonalityArt(String art) {
+        dialog.setGraphic(new PersonalityArt(art));
+        dialog.setContentDisplay(ContentDisplay.BOTTOM);
+        dialog.setGraphicTextGap(12);
     }
 
     /** Places the avatar on the left and applies the bot bubble style. */

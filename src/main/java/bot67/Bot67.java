@@ -48,6 +48,7 @@ public class Bot67 {
     private final Storage storage = new Storage();
     private final TaskList tasks;
     private boolean isExitRequested;
+    private boolean isLastResponseError;
 
     /** Loads saved tasks and prepares Bot67 to receive commands. */
     public Bot67() {
@@ -72,6 +73,7 @@ public class Bot67 {
 
     /** Processes one GUI command and returns Bot67's response without console separators. */
     public String getResponse(String input) {
+        isLastResponseError = false;
         if (input.equals("bye")) {
             isExitRequested = true;
             return "Bye. Hope to see you again soon. Six Seven!";
@@ -88,6 +90,16 @@ public class Bot67 {
         return isExitRequested;
     }
 
+    /** Supplies the original Braille art for graphical rendering without font dependencies. */
+    public static String getPersonalityArt() {
+        return PERSONALITY_ART;
+    }
+
+    /** Reports failure separately from response text so the GUI can highlight errors. */
+    public boolean isLastResponseError() {
+        return isLastResponseError;
+    }
+
     /** Executes one command using the supplied output UI. */
     private void execute(String command, Ui ui) {
         try {
@@ -99,8 +111,10 @@ public class Bot67 {
                 executeTaskCommand(command, ui);
             }
         } catch (Bot67Exception e) {
+            isLastResponseError = true;
             ui.showError(e.getMessage());
         } catch (RuntimeException e) {
+            isLastResponseError = true;
             ui.showError("I could not process that command. Please check its format.");
         }
     }

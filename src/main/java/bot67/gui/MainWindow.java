@@ -4,12 +4,17 @@ import java.util.Objects;
 
 import bot67.Bot67;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 /** Controls Bot67's main chat window. */
 public class MainWindow extends AnchorPane {
@@ -19,6 +24,10 @@ public class MainWindow extends AnchorPane {
     private VBox dialogContainer;
     @FXML
     private TextField userInput;
+    @FXML
+    private Button sendButton;
+    @FXML
+    private ImageView headerPicture;
 
     private final Image userImage = loadImage("/images/User.png");
     private final Image botImage = loadImage("/images/Bot67.png");
@@ -27,14 +36,27 @@ public class MainWindow extends AnchorPane {
     /** Keeps the newest messages visible as the conversation grows. */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        headerPicture.setImage(botImage);
+        double side = Math.min(botImage.getWidth(), botImage.getHeight());
+        double x = (botImage.getWidth() - side) / 2;
+        double y = (botImage.getHeight() - side) / 2;
+        headerPicture.setViewport(new Rectangle2D(x, y, side, side));
+        Rectangle clip = new Rectangle(48, 48);
+        clip.setArcWidth(16);
+        clip.setArcHeight(16);
+        headerPicture.setClip(clip);
+        sendButton.disableProperty().bind(Bindings.createBooleanBinding(() -> userInput.getText().isBlank(),
+                userInput.textProperty()));
+        Platform.runLater(userInput::requestFocus);
     }
 
     /** Injects the application logic after FXML creates this controller. */
     public void setBot(Bot67 bot) {
         this.bot = bot;
-        dialogContainer.getChildren().add(
-                DialogBox.getBotDialog("Hello! I'm Bot67. What can I do for you?", botImage));
+        DialogBox welcome = DialogBox.getBotDialog("Hello! I'm Bot67. Let's make room for what matters.\n\n"
+                + "Try: todo read a book\nOpen the command guide below for more ideas.", botImage);
+        welcome.showPersonalityArt(Bot67.getPersonalityArt());
+        dialogContainer.getChildren().add(welcome);
     }
 
     /** Sends one command and displays the user and Bot67 messages. */
@@ -45,10 +67,23 @@ public class MainWindow extends AnchorPane {
             return;
         }
         String response = bot.getResponse(input);
+        if (response.isBlank()) {
+            response = "Your task list is empty. Try: todo read a book";
+        }
+        DialogBox reply = DialogBox.getBotDialog(response, botImage);
+        if (bot.isLastResponseError()) {
+            reply.highlightError();
+        }
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getBotDialog(response, botImage));
+                reply);
         userInput.clear();
+        userInput.requestFocus();
+        Platform.runLater(() -> {
+            scrollPane.applyCss();
+            scrollPane.layout();
+            scrollPane.setVvalue(1.0);
+        });
         if (bot.isExitRequested()) {
             Platform.runLater(Platform::exit);
         }

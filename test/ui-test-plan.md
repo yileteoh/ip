@@ -263,3 +263,26 @@ Six seven! I've sorted your tasks alphabetically:
 2.[E][X] banana task (from: Mon 2pm to: 4pm)
 3.[T][ ] zebra task
 ```
+
+## A-BetterGui: graphical checks
+
+The console syntax and checkpoints above are unchanged. GUI-only behavior:
+
+- Launch with Java 25: the window shows Bot67, a welcome message, and a collapsed command guide.
+- Empty or whitespace-only input disables Send. Enter or Send submits a nonempty command and returns focus to input.
+- In a fresh session, `list` displays `Your task list is empty. Try: todo read a book`.
+- `todo prepare project demo` adds a user bubble and bot confirmation.
+- `deadline` displays the normal error with a `Check your command` heading and a contrasting error style.
+- Open the command guide: examples are visible above the input; close it to recover conversation space.
+- Resize to 420 by 500 and then enlarge: the composer remains usable and messages wrap.
+- After enough messages to scroll, new replies become visible; older replies remain reachable by scrolling.
+- `bye` exits the application.
+
+Automated JavaFX smoke check passed for FXML loading, disabled empty Send, sending a task, displaying an error,
+and keeping the input usable at 420 by 500. The 640 by 720 scene snapshot was visually inspected.
+
+Revision checks: the expanded guide uses 15px left-aligned text and scrolls within a bounded height. At 420 by 500, the input remains visible with the guide expanded. The header uses the bot picture at 48px; chat avatars are 44px with rounded corners. The conversation uses the original hearts background under a pale overlay and rose accents.
+
+The welcome message displays PERSONALITY_ART as drawn dots, without relying on Braille font support. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify the art fits at the minimum window width and scroll the guide to read its final lines.
+
+App icon: launching the JavaFX application loads images/Bot67.png as the stage icon, matching the bot profile picture.
