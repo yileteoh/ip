@@ -76,7 +76,7 @@ public class Bot67 {
         isLastResponseError = false;
         if (input.equals("bye")) {
             isExitRequested = true;
-            return "Bye. Hope to see you again soon. Six Seven!";
+            return Ui.GOODBYE;
         }
         ByteArrayOutputStream response = new ByteArrayOutputStream();
         try (PrintStream output = new PrintStream(response, true, StandardCharsets.UTF_8)) {
@@ -170,6 +170,11 @@ public class Bot67 {
 
     /** Displays every task in its numbered position. */
     private void showList(Ui ui) {
+        if (tasks.size() == 0) {
+            ui.showLine("Six seven! No tasks in the list yet. Let's start small: todo read a book");
+            return;
+        }
+        ui.showLine("Six seven! Here's your task lineup. One at a time, we've got this:");
         IntStream.rangeClosed(1, tasks.size())
                 .mapToObj(taskNumber -> taskNumber + "." + tasks.get(taskNumber).getDescription())
                 .forEach(ui::showLine);
@@ -179,7 +184,7 @@ public class Bot67 {
     private void sortTasks(Ui ui) {
         tasks.sortByName();
         saveTasks();
-        ui.showLine("Six seven! I've sorted your tasks alphabetically:");
+        ui.showLine("Six seven! I've sorted your tasks alphabetically. Even 67 likes a little order:");
         showList(ui);
     }
 
@@ -189,11 +194,16 @@ public class Bot67 {
         if (keyword.isEmpty()) {
             throw new Bot67Exception("Use: find <keyword>.");
         }
-        ui.showLine("Six seven! Here are the matching tasks in your list:");
-        IntStream.rangeClosed(1, tasks.size())
+        List<String> matches = IntStream.rangeClosed(1, tasks.size())
                 .filter(taskNumber -> tasks.get(taskNumber).getDescription().contains(keyword))
                 .mapToObj(taskNumber -> taskNumber + "." + tasks.get(taskNumber).getDescription())
-                .forEach(ui::showLine);
+                .toList();
+        if (matches.isEmpty()) {
+            ui.showLine("Six seven... no matching tasks this time. Try another keyword!");
+        } else {
+            ui.showLine("Six seven! Found them. Here are the matching tasks in your list:");
+            matches.forEach(ui::showLine);
+        }
     }
 
     /** Marks or unmarks the task at the supplied position. */
@@ -202,12 +212,12 @@ public class Bot67 {
         if (isDone) {
             tasks.mark(taskNumber);
             saveTasks();
-            ui.showLine("Six seven! I've marked this task as done:",
+            ui.showLine("Six seven! One task down! I've marked this task as done:",
                     "  [X] " + tasks.get(taskNumber).getName());
         } else {
             tasks.unmark(taskNumber);
             saveTasks();
-            ui.showLine("Six seven! I've marked this task as not done yet:",
+            ui.showLine("Six seven! Another round? I've marked this task as not done yet:",
                     "  [ ] " + tasks.get(taskNumber).getName());
         }
     }
@@ -220,18 +230,23 @@ public class Bot67 {
         }
         Task deletedTask = tasks.delete(taskNumber);
         saveTasks();
-        ui.showLine("Six seven. I've removed this task:",
+        ui.showLine("Six seven. Making room! I've removed this task:",
                 "  " + deletedTask.getDescription(),
-                "Now you have " + tasks.size() + " tasks in the list.");
+                "Now you have " + taskCount() + " in the list.");
     }
 
     /** Adds and saves one task. */
     private void addTask(Task task, Ui ui) {
         tasks.add(task);
         saveTasks();
-        ui.showLine("Six seven! I've added this task:",
+        ui.showLine("Six seven! On it. I've added this task:",
                 "  " + task.getDescription(),
-                "You have " + tasks.size() + " tasks in the list. 67!");
+                "You have " + taskCount() + " in the list. 67!");
+    }
+
+    /** Formats the actual task count without letting the catchphrase obscure it. */
+    private String taskCount() {
+        return tasks.size() + (tasks.size() == 1 ? " task" : " tasks");
     }
 
     /** Loads saved tasks, falling back to an empty list if reading fails. */

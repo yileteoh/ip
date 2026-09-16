@@ -6,6 +6,8 @@ import java.io.PrintStream;
  * Handles output for Bot67's command-line interface.
  */
 public class Ui {
+    public static final String WELCOME = "Hello! I'm Bot67. Six seven! Your tasks, my favourite topic after 67.";
+    public static final String GOODBYE = "Bye. Hope to see you again soon. Six Seven!";
     private static final String SEPARATOR = "____________________________________________________________";
     private final PrintStream output;
 
@@ -23,8 +25,8 @@ public class Ui {
     public void showWelcome(String banner) {
         output.println(banner);
         showSeparator();
-        output.println("Hello! I'm Bot67.");
-        output.println("What can I do for you?");
+        output.println(WELCOME);
+        output.println("Let's take it one task at a time. Try: todo read a book");
         showSeparator();
     }
 
@@ -32,7 +34,7 @@ public class Ui {
     public void showGoodbye(String personalityArt) {
         output.println("67676767676767676767676767676767676767");
         output.println(personalityArt);
-        output.println("Bye. Hope to see you again soon. Six Seven!");
+        output.println(GOODBYE);
         showSeparator();
     }
 
@@ -44,6 +46,7 @@ public class Ui {
     /** Displays an error message using Bot67's standard prefix. */
     public void showError(String message) {
         output.println("SIX SEVEN! " + message);
+        output.println("No worries. Give it another go - I've got you. 67!");
     }
 
     /** Displays one or more lines of normal application output in the supplied order. */
