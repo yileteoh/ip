@@ -118,7 +118,7 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-Six seven. I've removed this task:
+Six seven. Making room! I've removed this task:
   [D][ ] return book (by: Sunday)
 Now you have 2 tasks in the list.
 1.[T][ ] borrow book
@@ -169,9 +169,9 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-Six seven. I've removed this task:
+Six seven. Making room! I've removed this task:
   [E][X] project meeting (from: Mon 2pm to: 4pm)
-Now you have 1 tasks in the list.
+Now you have 1 task in the list.
 1.[T][ ] read book
 ```
 
@@ -189,9 +189,9 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-Six seven! I've added this task:
+Six seven! On it. I've added this task:
   [T][ ] read book
-You have 1 tasks in the list. 67!
+You have 1 task in the list. 67!
 ```
 
 Console record: passed. The application created `data/duke.txt` with the saved task.
@@ -234,10 +234,10 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-Six seven! Here are the matching tasks in your list:
+Six seven! Found them. Here are the matching tasks in your list:
 1.[T][ ] read book
 2.[D][ ] return book (by: Sunday)
-Six seven! Here are the matching tasks in your list:
+Six seven... no matching tasks this time. Try another keyword!
 ```
 
 ## Test 11: Sort tasks alphabetically
@@ -258,19 +258,62 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-Six seven! I've sorted your tasks alphabetically:
+Six seven! I've sorted your tasks alphabetically. Even 67 likes a little order:
 1.[D][ ] Apple task (by: Oct 15 2026)
 2.[E][X] banana task (from: Mon 2pm to: 4pm)
 3.[T][ ] zebra task
 ```
 
+## Test 12: Friendly empty lists and recovery
+
+Aim: Verify the 67 personality in the greeting, empty states, errors, task feedback, and farewell.
+
+Input commands:
+
+```text
+list
+sort
+find book
+todo
+todo read book
+mark 1
+unmark 1
+delete 1
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+Hello! I'm Bot67. Six seven! Your tasks, my favourite topic after 67.
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+Six seven! I've sorted your tasks alphabetically. Even 67 likes a little order:
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+Six seven... no matching tasks this time. Try another keyword!
+SIX SEVEN! A todo description cannot be empty.
+No worries. Give it another go - I've got you. 67!
+Six seven! On it. I've added this task:
+  [T][ ] read book
+You have 1 task in the list. 67!
+Six seven! One task down! I've marked this task as done:
+  [X] read book
+Six seven! Another round? I've marked this task as not done yet:
+  [ ] read book
+Six seven. Making room! I've removed this task:
+  [T][ ] read book
+Now you have 0 tasks in the list.
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+Bye. Hope to see you again soon. Six Seven!
+```
+
 ## A-BetterGui: graphical checks
 
-The console syntax and checkpoints above are unchanged. GUI-only behavior:
+The console syntax is unchanged; personality replies use the checkpoints above. GUI-only behavior:
 
 - Launch with Java 25: the window shows Bot67, a welcome message, and a collapsed command guide.
 - Empty or whitespace-only input disables Send. Enter or Send submits a nonempty command and returns focus to input.
-- In a fresh session, `list` displays `Your task list is empty. Try: todo read a book`.
+- In a fresh session, `list` displays `Six seven! No tasks in the list yet. Let's start small: todo read a book`.
 - `todo prepare project demo` adds a user bubble and bot confirmation.
 - `deadline` displays the normal error with a `Check your command` heading and a contrasting error style.
 - Open the command guide: examples are visible above the input; close it to recover conversation space.
