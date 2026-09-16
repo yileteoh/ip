@@ -315,7 +315,7 @@ The console syntax is unchanged; personality replies use the checkpoints above. 
 - Empty or whitespace-only input disables Send. Enter or Send submits a nonempty command and returns focus to input.
 - In a fresh session, `list` displays `Six seven! No tasks in the list yet. Let's start small: todo read a book`.
 - `todo prepare project demo` adds a user bubble and bot confirmation.
-- `deadline` displays the normal error with a `Something needs attention` heading and a contrasting error style.
+- `deadline` displays the normal error text without an added heading, using a contrasting error style.
 - Open the command guide: examples are visible above the input; close it to recover conversation space.
 - Resize to 420 by 500 and then enlarge: the composer remains usable and messages wrap.
 - After enough messages to scroll, new replies become visible; older replies remain reachable by scrolling.
@@ -501,7 +501,7 @@ Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\d
 
 ### A-MoreErrorHandling: graphical checks
 
-- A corrupt or unreadable save file shows a startup warning with the `Something needs attention` heading.
+- A corrupt or unreadable save file shows the startup warning text without an added heading.
 - Storage failures and command errors use the same contrasting error style.
 - Correcting invalid input lets the next valid response return to normal styling.
 - A save failure reports that the change was not applied; `list` still shows the previous tasks.
