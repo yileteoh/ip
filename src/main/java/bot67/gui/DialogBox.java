@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 
 /** Represents one chat message and its speaker's avatar. */
 public class DialogBox extends HBox {
@@ -34,9 +35,13 @@ public class DialogBox extends HBox {
         dialog.setText(text);
         displayPicture.setImage(image);
         cropToSquare(image);
-        displayPicture.setFitWidth(28);
-        displayPicture.setFitHeight(28);
-        dialog.maxWidthProperty().bind(widthProperty().subtract(48).multiply(0.85));
+        displayPicture.setFitWidth(44);
+        displayPicture.setFitHeight(44);
+        Rectangle clip = new Rectangle(44, 44);
+        clip.setArcWidth(14);
+        clip.setArcHeight(14);
+        displayPicture.setClip(clip);
+        dialog.maxWidthProperty().bind(widthProperty().subtract(70).multiply(0.85));
     }
 
     /** Creates a right-aligned user message. */
@@ -49,7 +54,7 @@ public class DialogBox extends HBox {
         DialogBox box = new DialogBox(text, image);
         box.flip();
         box.dialog.maxWidthProperty().unbind();
-        box.dialog.maxWidthProperty().bind(box.widthProperty().subtract(48));
+        box.dialog.maxWidthProperty().bind(box.widthProperty().subtract(70));
         return box;
     }
 

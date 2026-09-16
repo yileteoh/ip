@@ -6,12 +6,15 @@ import bot67.Bot67;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 
 /** Controls Bot67's main chat window. */
 public class MainWindow extends AnchorPane {
@@ -23,6 +26,8 @@ public class MainWindow extends AnchorPane {
     private TextField userInput;
     @FXML
     private Button sendButton;
+    @FXML
+    private ImageView headerPicture;
 
     private final Image userImage = loadImage("/images/User.png");
     private final Image botImage = loadImage("/images/Bot67.png");
@@ -31,6 +36,15 @@ public class MainWindow extends AnchorPane {
     /** Keeps the newest messages visible as the conversation grows. */
     @FXML
     public void initialize() {
+        headerPicture.setImage(botImage);
+        double side = Math.min(botImage.getWidth(), botImage.getHeight());
+        double x = (botImage.getWidth() - side) / 2;
+        double y = (botImage.getHeight() - side) / 2;
+        headerPicture.setViewport(new Rectangle2D(x, y, side, side));
+        Rectangle clip = new Rectangle(48, 48);
+        clip.setArcWidth(16);
+        clip.setArcHeight(16);
+        headerPicture.setClip(clip);
         sendButton.disableProperty().bind(Bindings.createBooleanBinding(() -> userInput.getText().isBlank(),
                 userInput.textProperty()));
         Platform.runLater(userInput::requestFocus);

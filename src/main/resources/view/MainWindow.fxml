@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane prefHeight="720" prefWidth="640" stylesheets="@../css/main.css"
  xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bot67.gui.MainWindow">
  <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
   <HBox styleClass="header" alignment="CENTER_LEFT" spacing="12">
-   <Label text="67" styleClass="brand" />
+   <ImageView fx:id="headerPicture" fitWidth="48" fitHeight="48" preserveRatio="true" />
    <VBox spacing="3" HBox.hgrow="ALWAYS">
     <Label text="Bot67" styleClass="title" />
     <Label text="A little less to remember." styleClass="muted" />
@@ -15,9 +16,11 @@
    <VBox fx:id="dialogContainer" spacing="18" styleClass="conversation" />
   </ScrollPane>
   <VBox styleClass="composer" spacing="12">
-   <TitledPane text="Command guide" expanded="false" animated="false">
-    <Label wrapText="true" minHeight="-Infinity" styleClass="guide"
+   <TitledPane fx:id="commandGuide" text="Command guide" expanded="false" animated="false" minHeight="-Infinity">
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" minHeight="140" prefHeight="140" maxHeight="140">
+    <Label wrapText="true" minHeight="-Infinity" maxWidth="Infinity" alignment="TOP_LEFT" styleClass="guide"
      text="todo read a book&#10;deadline submit report /by 2026-10-15&#10;event meeting /from 2026-10-15T14:00 /to 2026-10-15T16:00&#10;list · find book · sort&#10;mark 1 · unmark 1 · delete 1 · bye" />
+    </ScrollPane>
    </TitledPane>
    <HBox spacing="10" alignment="CENTER">
     <TextField fx:id="userInput" onAction="#handleUserInput" promptText="Type a command…" accessibleText="Command input" HBox.hgrow="ALWAYS" />

@@ -280,3 +280,5 @@ The console syntax and checkpoints above are unchanged. GUI-only behavior:
 
 Automated JavaFX smoke check passed for FXML loading, disabled empty Send, sending a task, displaying an error,
 and keeping the input usable at 420 by 500. The 640 by 720 scene snapshot was visually inspected.
+
+Revision checks: the expanded guide uses 15px left-aligned text and scrolls within a bounded height. At 420 by 500, the input remains visible with the guide expanded. The header uses the bot picture at 48px; chat avatars are 44px with rounded corners. The conversation uses the original hearts background under a pale overlay and rose accents.
