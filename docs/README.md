@@ -38,3 +38,18 @@ expected output
 ## Feature XYZ
 
 // Feature details
+
+## Command validation
+
+Commands are case-sensitive. Extra spaces and tabs are collapsed to one space, including in task descriptions.
+Use `list` to find a task's current number. Task numbers must be positive whole numbers in the current list.
+`list`, `sort`, and `bye` take no arguments.
+
+Use `/by` once for a deadline, and `/from` followed by `/to` once each for an event, with spaces around each marker.
+Descriptions and date values cannot be empty. Pipe characters (`|`) and control characters other than tabs are
+not accepted because tasks are stored as one line with pipe-separated fields.
+
+Dates accept `yyyy-MM-dd`, `yyyy-MM-ddTHH:mm`, or `yyyy-MM-dd HH:mm`.
+Impossible dates and times are rejected. When both event endpoints are ISO dates, the start must be before the end;
+a date without a time means midnight. Free-form values such as `Sunday` and `Mon 2pm` are still supported,
+but their ordering cannot be checked. Duplicate tasks are allowed, including tasks with the same details.

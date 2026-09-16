@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 /** Parses and formats the ISO date/time values supported by Level 8. */
 public final class DateTimeParser {
     private static final DateTimeFormatter DISPLAY_DATE = DateTimeFormatter.ofPattern("MMM d yyyy");
     private static final DateTimeFormatter DISPLAY_DATE_TIME = DateTimeFormatter.ofPattern("MMM d yyyy HH:mm");
-    private static final DateTimeFormatter INPUT_DATE_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter INPUT_DATE_TIME = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm")
+            .withResolverStyle(ResolverStyle.STRICT);
 
     /** Prevents construction of this utility class. */
     private DateTimeParser() {

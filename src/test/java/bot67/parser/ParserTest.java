@@ -23,7 +23,8 @@ class ParserTest {
         assertEquals(7, parser.parseTaskNumber(" 7 "));
         assertThrows(Bot67Exception.class, () -> parser.parseTaskNumber("abc"));
         assertThrows(Bot67Exception.class, () -> parser.parseTaskNumber("0"));
-        assertThrows(Bot67Exception.class, () -> parser.parseTaskNumber("101"));
+        assertEquals(101, parser.parseTaskNumber("101"));
+        assertThrows(Bot67Exception.class, () -> parser.parseTaskNumber("999999999999999999"));
     }
 
     @Test

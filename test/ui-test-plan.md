@@ -96,7 +96,7 @@ Expected output checkpoints, in order:
 SIX SEVEN! Use: deadline <description> /by <date or time>.
 SIX SEVEN! Use: event <description> /from <start> /to <end>.
 SIX SEVEN! Task number must be a whole number.
-SIX SEVEN! Task number must be between 1 and 100.
+SIX SEVEN! Task number must be a positive whole number.
 1.[T][ ] valid task
 ```
 
@@ -144,9 +144,9 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-SIX SEVEN! I do not recognize that command.
+SIX SEVEN! Use: delete <task number>.
 SIX SEVEN! Task number must be a whole number.
-SIX SEVEN! Task number must be between 1 and 100.
+SIX SEVEN! Task number must be a positive whole number.
 SIX SEVEN! Task number is out of range.
 1.[T][ ] valid task
 ```
@@ -329,3 +329,95 @@ Revision checks: the expanded guide uses 15px left-aligned text and scrolls with
 The welcome message displays PERSONALITY_ART as drawn dots, without relying on Braille font support. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify the art fits at the minimum window width and scroll the guide to read its final lines.
 
 App icon: launching the JavaFX application loads images/Bot67.png as the stage icon, matching the bot profile picture.
+
+## Test 13: Whitespace and argument recovery
+
+Aim: Accept extra whitespace and show specific guidance without losing the task list.
+
+Input commands:
+
+```text
+  todo   read   book
+mark
+unmark
+find
+list extra
+sort extra
+bye extra
+mark 2
+unmark 9999999999999999
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+  [T][ ] read book
+SIX SEVEN! Use: mark <task number>.
+SIX SEVEN! Use: unmark <task number>.
+SIX SEVEN! Use: find <keyword>.
+SIX SEVEN! Use: list (no arguments).
+SIX SEVEN! Use: sort (no arguments).
+SIX SEVEN! Use: bye (no arguments).
+SIX SEVEN! Task number is out of range.
+SIX SEVEN! Task number must be a whole number.
+1.[T][ ] read book
+```
+
+## Test 14: Malformed parameters and unsafe text
+
+Aim: Reject missing descriptions, repeated or reordered parameters, and save-file delimiters.
+
+Input commands:
+
+```text
+deadline   /by Sunday
+deadline task /by Sunday /by Monday
+event meeting /to Tue /from Mon
+event meeting /from Mon /to Tue /to Wed
+event meeting /from Mon /to
+todo a | b
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Use: deadline <description> /by <date or time>.
+SIX SEVEN! Use: deadline <description> /by <date or time>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Commands cannot contain | or control characters other than tabs.
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+```
+
+## Test 15: Strict dates and event ordering
+
+Aim: Reject impossible dates and non-increasing ISO event ranges, then accept valid dates.
+
+Input commands:
+
+```text
+deadline task /by 2026-02-30 12:00
+deadline task /by 2026-02-30T12:00
+deadline task /by 2026-10-15 24:00
+event meeting /from 2026-10-15 /to 2026-10-15
+event meeting /from 2026-10-16T14:00 /to 2026-10-15T14:00
+deadline leap day /by 2028-02-29
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Invalid deadline date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.
+SIX SEVEN! Invalid deadline date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.
+SIX SEVEN! Invalid deadline date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.
+SIX SEVEN! Event start must be before its end.
+SIX SEVEN! Event start must be before its end.
+1.[D][ ] leap day (by: Feb 29 2028)
+```

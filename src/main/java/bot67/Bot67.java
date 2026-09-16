@@ -74,15 +74,11 @@ public class Bot67 {
     /** Processes one GUI command and returns Bot67's response without console separators. */
     public String getResponse(String input) {
         isLastResponseError = false;
-        if (input.equals("bye")) {
-            isExitRequested = true;
-            return Ui.GOODBYE;
-        }
         ByteArrayOutputStream response = new ByteArrayOutputStream();
         try (PrintStream output = new PrintStream(response, true, StandardCharsets.UTF_8)) {
             execute(input, new Ui(output));
         }
-        return response.toString(StandardCharsets.UTF_8).stripTrailing();
+        return isExitRequested ? Ui.GOODBYE : response.toString(StandardCharsets.UTF_8).stripTrailing();
     }
 
     /** Returns whether the latest command requested application shutdown. */
@@ -102,7 +98,10 @@ public class Bot67 {
 
     /** Executes one command using the supplied output UI. */
     private void execute(String command, Ui ui) {
+        isLastResponseError = false;
         try {
+            command = parser.normalize(command);
+            requireCommandArguments(command);
             Command parsedCommand = parser.parse(command, PERSONALITY_ART);
             if (parsedCommand != null) {
                 parsedCommand.execute(tasks, ui, storage);
@@ -146,6 +145,23 @@ public class Bot67 {
             addTask(new Event(command), ui);
         } else {
             throw new Bot67Exception("I do not recognize that command.");
+        }
+    }
+
+    /** Gives usage guidance for missing arguments and rejects extra arguments to simple commands. */
+    private void requireCommandArguments(String command) throws Bot67Exception {
+        switch (command) {
+            case "find":
+                throw new Bot67Exception("Use: find <keyword>.");
+            case "mark":
+            case "unmark":
+            case "delete":
+                throw new Bot67Exception("Use: " + command + " <task number>.");
+            default:
+                String keyword = command.split(" ", 2)[0];
+                if (List.of("list", "sort", "bye").contains(keyword) && !command.equals(keyword)) {
+                    throw new Bot67Exception("Use: " + keyword + " (no arguments).");
+                }
         }
     }
 
@@ -213,7 +229,7 @@ public class Bot67 {
 
     /** Marks or unmarks the task at the supplied position. */
     private void changeTaskStatus(String value, boolean isDone, Ui ui) throws Bot67Exception {
-        int taskNumber = parser.parseTaskNumber(value);
+        int taskNumber = requireExistingTaskNumber(value);
         if (isDone) {
             tasks.mark(taskNumber);
             saveTasks();
@@ -227,12 +243,18 @@ public class Bot67 {
         }
     }
 
-    /** Deletes the task at the supplied position. */
-    private void deleteTask(String value, Ui ui) throws Bot67Exception {
+    /** Validates task positions consistently for mark, unmark, and delete. */
+    private int requireExistingTaskNumber(String value) throws Bot67Exception {
         int taskNumber = parser.parseTaskNumber(value);
         if (taskNumber > tasks.size()) {
             throw new Bot67Exception("Task number is out of range.");
         }
+        return taskNumber;
+    }
+
+    /** Deletes the task at the supplied position. */
+    private void deleteTask(String value, Ui ui) throws Bot67Exception {
+        int taskNumber = requireExistingTaskNumber(value);
         Task deletedTask = tasks.delete(taskNumber);
         saveTasks();
         ui.showLine("Six seven. Making room! I've removed this task:",
