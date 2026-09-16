@@ -3,6 +3,7 @@ package bot67.gui;
 import java.util.Objects;
 
 import bot67.Bot67;
+import bot67.ui.Ui;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -53,7 +54,7 @@ public class MainWindow extends AnchorPane {
     /** Injects the application logic after FXML creates this controller. */
     public void setBot(Bot67 bot) {
         this.bot = bot;
-        DialogBox welcome = DialogBox.getBotDialog("Hello! I'm Bot67. Let's make room for what matters.\n\n"
+        DialogBox welcome = DialogBox.getBotDialog(Ui.WELCOME + "\n\n"
                 + "Try: todo read a book\nOpen the command guide below for more ideas.", botImage);
         welcome.showPersonalityArt(Bot67.getPersonalityArt());
         dialogContainer.getChildren().add(welcome);
