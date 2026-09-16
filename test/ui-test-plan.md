@@ -243,6 +243,7 @@ Six seven... no matching tasks this time. Try another keyword!
 ## Test 11: Sort tasks alphabetically
 
 Aim: Verify that `sort` orders mixed task types by description without losing their status or date information.
+The sort heading must be followed immediately by the task rows, without the `list` introduction.
 
 Input commands:
 
@@ -289,7 +290,6 @@ Expected output checkpoints, in order:
 Hello! I'm Bot67. Six seven! Your tasks, my favourite topic after 67.
 Six seven! No tasks in the list yet. Let's start small: todo read a book
 Six seven! I've sorted your tasks alphabetically. Even 67 likes a little order:
-Six seven! No tasks in the list yet. Let's start small: todo read a book
 Six seven... no matching tasks this time. Try another keyword!
 SIX SEVEN! A todo description cannot be empty.
 No worries. Give it another go - I've got you. 67!

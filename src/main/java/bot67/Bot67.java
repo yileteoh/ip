@@ -175,6 +175,11 @@ public class Bot67 {
             return;
         }
         ui.showLine("Six seven! Here's your task lineup. One at a time, we've got this:");
+        showTaskRows(ui);
+    }
+
+    /** Displays numbered task rows without a command-specific introduction. */
+    private void showTaskRows(Ui ui) {
         IntStream.rangeClosed(1, tasks.size())
                 .mapToObj(taskNumber -> taskNumber + "." + tasks.get(taskNumber).getDescription())
                 .forEach(ui::showLine);
@@ -185,7 +190,7 @@ public class Bot67 {
         tasks.sortByName();
         saveTasks();
         ui.showLine("Six seven! I've sorted your tasks alphabetically. Even 67 likes a little order:");
-        showList(ui);
+        showTaskRows(ui);
     }
 
     /** Displays tasks containing the requested keyword. */
