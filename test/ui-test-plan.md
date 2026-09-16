@@ -96,7 +96,7 @@ Expected output checkpoints, in order:
 SIX SEVEN! Use: deadline <description> /by <date or time>.
 SIX SEVEN! Use: event <description> /from <start> /to <end>.
 SIX SEVEN! Task number must be a whole number.
-SIX SEVEN! Task number must be between 1 and 100.
+SIX SEVEN! Task number must be a positive whole number.
 1.[T][ ] valid task
 ```
 
@@ -144,9 +144,9 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-SIX SEVEN! I do not recognize that command.
+SIX SEVEN! Use: delete <task number>.
 SIX SEVEN! Task number must be a whole number.
-SIX SEVEN! Task number must be between 1 and 100.
+SIX SEVEN! Task number must be a positive whole number.
 SIX SEVEN! Task number is out of range.
 1.[T][ ] valid task
 ```
@@ -315,7 +315,7 @@ The console syntax is unchanged; personality replies use the checkpoints above. 
 - Empty or whitespace-only input disables Send. Enter or Send submits a nonempty command and returns focus to input.
 - In a fresh session, `list` displays `Six seven! No tasks in the list yet. Let's start small: todo read a book`.
 - `todo prepare project demo` adds a user bubble and bot confirmation.
-- `deadline` displays the normal error with a `Check your command` heading and a contrasting error style.
+- `deadline` displays the normal error text without an added heading, using a contrasting error style.
 - Open the command guide: examples are visible above the input; close it to recover conversation space.
 - Resize to 420 by 500 and then enlarge: the composer remains usable and messages wrap.
 - After enough messages to scroll, new replies become visible; older replies remain reachable by scrolling.
@@ -326,6 +326,189 @@ and keeping the input usable at 420 by 500. The 640 by 720 scene snapshot was vi
 
 Revision checks: the expanded guide uses 15px left-aligned text and scrolls within a bounded height. At 420 by 500, the input remains visible with the guide expanded. The header uses the bot picture at 48px; chat avatars are 44px with rounded corners. The conversation uses the original hearts background under a pale overlay and rose accents.
 
-The welcome message displays PERSONALITY_ART as drawn dots, without relying on Braille font support. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify the art fits at the minimum window width and scroll the guide to read its final lines.
+The welcome message displays the original ASCII BANNER in a 12px monospace font, followed by PERSONALITY_ART as drawn dots and the welcome text. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify both artworks fit without wrapping or clipping at the minimum window width and scroll the guide to read its final lines.
 
 App icon: launching the JavaFX application loads images/Bot67.png as the stage icon, matching the bot profile picture.
+
+## Test 13: Whitespace and argument recovery
+
+Aim: Accept extra whitespace and show specific guidance without losing the task list.
+
+Input commands:
+
+```text
+  todo   read   book
+mark
+unmark
+find
+list extra
+sort extra
+bye extra
+mark 2
+unmark 9999999999999999
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+  [T][ ] read book
+SIX SEVEN! Use: mark <task number>.
+SIX SEVEN! Use: unmark <task number>.
+SIX SEVEN! Use: find <keyword>.
+SIX SEVEN! Use: list (no arguments).
+SIX SEVEN! Use: sort (no arguments).
+SIX SEVEN! Use: bye (no arguments).
+SIX SEVEN! Task number is out of range.
+SIX SEVEN! Task number must be a whole number.
+1.[T][ ] read book
+```
+
+## Test 14: Malformed parameters and unsafe text
+
+Aim: Reject missing descriptions, repeated or reordered parameters, and save-file delimiters.
+
+Input commands:
+
+```text
+deadline   /by Sunday
+deadline task /by Sunday /by Monday
+event meeting /to Tue /from Mon
+event meeting /from Mon /to Tue /to Wed
+event meeting /from Mon /to
+todo a | b
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Use: deadline <description> /by <date or time>.
+SIX SEVEN! Use: deadline <description> /by <date or time>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Use: event <description> /from <start> /to <end>.
+SIX SEVEN! Commands cannot contain | or control characters other than tabs.
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+```
+
+## Test 15: Strict dates and event ordering
+
+Aim: Reject impossible dates and non-increasing ISO event ranges, then accept valid dates.
+
+Input commands:
+
+```text
+deadline task /by 2026-02-30 12:00
+deadline task /by 2026-02-30T12:00
+deadline task /by 2026-10-15 24:00
+event meeting /from 2026-10-15 /to 2026-10-15
+event meeting /from 2026-10-16T14:00 /to 2026-10-15T14:00
+deadline leap day /by 2028-02-29
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Invalid deadline date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.
+SIX SEVEN! Invalid deadline date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.
+SIX SEVEN! Invalid deadline date/time. Use yyyy-MM-dd or yyyy-MM-ddTHH:mm.
+SIX SEVEN! Event start must be before its end.
+SIX SEVEN! Event start must be before its end.
+1.[D][ ] leap day (by: Feb 29 2028)
+```
+
+## Test 16: Damaged save file is protected
+
+Aim: Warn on startup, identify the damaged line, and refuse to overwrite the original file.
+Setup: Create `data/duke.txt` with the following exact content before starting Bot67:
+
+```text
+T | 0 | keep this task
+D | 0 | impossible date | 2026-02-30
+```
+
+Input commands:
+
+```text
+todo replacement
+sort
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Could not load saved tasks. No tasks were loaded; changes are disabled to protect your file.
+Check data/duke.txt and restart Bot67.
+Invalid saved task at line 2.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+Bye. Hope to see you again soon. Six Seven!
+```
+
+Also verify that the save file's contents are unchanged. On Windows, accept `data\duke.txt` in path messages.
+
+## Test 17: Unreadable save path is protected
+
+Aim: Treat a directory at the save-file path as an error, not an empty first session.
+Setup: Create a directory at `data/duke.txt` before starting Bot67.
+
+Input commands:
+
+```text
+todo replacement
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Could not load saved tasks. No tasks were loaded; changes are disabled to protect your file.
+Check data/duke.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+Bye. Hope to see you again soon. Six Seven!
+```
+
+Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\duke.txt` in path messages.
+
+## Test 18: Save failure leaves the list unchanged
+
+Aim: A failed first save reports a storage error and rolls back the new task.
+Setup: Start Bot67 with no save file. After the welcome message, create a directory at `data/duke.txt`.
+
+Input commands:
+
+```text
+todo unsaved task
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Could not save tasks. Your change was not applied. Check data/duke.txt and its folder permissions, then try again.
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+Bye. Hope to see you again soon. Six Seven!
+```
+
+Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\duke.txt` in path messages.
+
+### A-MoreErrorHandling: graphical checks
+
+- A corrupt or unreadable save file shows the startup warning text without an added heading.
+- Storage failures and command errors use the same contrasting error style.
+- Correcting invalid input lets the next valid response return to normal styling.
+- A save failure reports that the change was not applied; `list` still shows the previous tasks.
+
+Automated JavaFX smoke check passed for loading the actual FXML, showing the startup storage warning,
+highlighting a reversed event-range error, and clearing the error style and input after a valid command.
+
+Banner regression check passed: the GUI displays the exact original BANNER in monospace, with its horizontal
+bounds inside both 420px and 640px windows. Snapshots at 420 by 500 and 640 by 720 were visually inspected;
+the smaller window scrolls to reveal the complete welcome bubble.

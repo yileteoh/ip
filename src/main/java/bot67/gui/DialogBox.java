@@ -15,7 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /** Represents one chat message and its speaker's avatar. */
 public class DialogBox extends HBox {
@@ -59,16 +63,21 @@ public class DialogBox extends HBox {
         return box;
     }
 
-    /** Adds a textual cue as well as color to distinguish failed commands. */
+    /** Highlights errors without adding a heading to the response text. */
     public void highlightError() {
-        dialog.setText("Check your command\n" + dialog.getText());
         dialog.getStyleClass().add("error-label");
     }
 
-    /** Places font-independent personality art below the welcome text. */
-    public void showPersonalityArt(String art) {
-        dialog.setGraphic(new PersonalityArt(art));
-        dialog.setContentDisplay(ContentDisplay.BOTTOM);
+    /** Shows the original banner and personality art above the welcome text. */
+    public void showWelcomeArt(String banner, String art) {
+        Text bannerText = new Text(banner.stripTrailing());
+        bannerText.setFont(Font.font("Monospaced", 12));
+        bannerText.setFill(Color.web("#913553"));
+        bannerText.setAccessibleText("Bot67 ASCII banner");
+        VBox artwork = new VBox(12, bannerText, new PersonalityArt(art));
+        artwork.setAlignment(Pos.CENTER);
+        dialog.setGraphic(artwork);
+        dialog.setContentDisplay(ContentDisplay.TOP);
         dialog.setGraphicTextGap(12);
     }
 
