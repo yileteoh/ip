@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane prefHeight="600.0" prefWidth="420.0" stylesheets="@../css/main.css"
-            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="bot67.gui.MainWindow">
-    <children>
-        <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
-                    AnchorPane.bottomAnchor="51.0" AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <content>
-                <VBox fx:id="dialogContainer" spacing="4.0" />
-            </content>
-        </ScrollPane>
-        <TextField fx:id="userInput" onAction="#handleUserInput" promptText="Type a command..."
-                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                   AnchorPane.rightAnchor="84.0" />
-        <Button mnemonicParsing="false" onAction="#handleUserInput" text="Send"
-                AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-    </children>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="720" prefWidth="640" stylesheets="@../css/main.css"
+ xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bot67.gui.MainWindow">
+ <VBox AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+  <HBox styleClass="header" alignment="CENTER_LEFT" spacing="12">
+   <Label text="67" styleClass="brand" />
+   <VBox spacing="3" HBox.hgrow="ALWAYS">
+    <Label text="Bot67" styleClass="title" />
+    <Label text="A little less to remember." styleClass="muted" />
+   </VBox>
+  </HBox>
+  <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+   <VBox fx:id="dialogContainer" spacing="18" styleClass="conversation" />
+  </ScrollPane>
+  <VBox styleClass="composer" spacing="12">
+   <TitledPane text="Command guide" expanded="false" animated="false">
+    <Label wrapText="true" minHeight="-Infinity" styleClass="guide"
+     text="todo read a book&#10;deadline submit report /by 2026-10-15&#10;event meeting /from 2026-10-15T14:00 /to 2026-10-15T16:00&#10;list · find book · sort&#10;mark 1 · unmark 1 · delete 1 · bye" />
+   </TitledPane>
+   <HBox spacing="10" alignment="CENTER">
+    <TextField fx:id="userInput" onAction="#handleUserInput" promptText="Type a command…" accessibleText="Command input" HBox.hgrow="ALWAYS" />
+    <Button fx:id="sendButton" onAction="#handleUserInput" text="Send" mnemonicParsing="false" />
+   </HBox>
+   <Label text="Enter to send · Tasks are saved on this device" styleClass="muted" />
+  </VBox>
+ </VBox>
 </AnchorPane>

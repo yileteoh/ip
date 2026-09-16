@@ -1,20 +1,3 @@
-.label {
-    -fx-background-color: rgba(255, 255, 255, 0.94);
-    -fx-background-radius: 14px 14px 2px 14px;
-    -fx-border-color: #ff9199;
-    -fx-border-radius: 14px 14px 2px 14px;
-    -fx-border-width: 2px;
-    -fx-font-size: 14px;
-    -fx-label-padding: 8px;
-    -fx-max-width: 300px;
-}
-
-.reply-label {
-    -fx-background-color: rgba(255, 228, 232, 0.96);
-    -fx-background-radius: 14px 14px 14px 2px;
-    -fx-border-radius: 14px 14px 14px 2px;
-}
-
-#displayPicture {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0.3, 2, 2);
-}
+.label { -fx-background-color: #e0f0ec; -fx-background-radius: 14 3 14 14; -fx-padding: 12 16; -fx-font-size: 14; -fx-text-fill: #243542; }
+.reply-label { -fx-background-color: white; -fx-background-radius: 3 14 14 14; -fx-border-color: #e4e8ec; -fx-border-radius: 3 14 14 14; }
+.error-label { -fx-background-color: #fff2ef; -fx-border-color: #da9a8c; -fx-text-fill: #8c3020; }

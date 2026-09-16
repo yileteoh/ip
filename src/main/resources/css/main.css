@@ -1,38 +1,21 @@
-.root {
-    -fx-background-image: url("../images/Background.png");
-    -fx-background-position: center;
-    -fx-background-repeat: repeat;
-    -fx-background-size: 270px 480px;
-    -fx-font-family: "Arial";
-}
-
-.scroll-pane,
-.scroll-pane > .viewport,
-.scroll-pane .content {
-    -fx-background-color: transparent;
-}
-
-.text-field {
-    -fx-background-color: rgba(255, 255, 255, 0.94);
-    -fx-border-color: #ff9199;
-    -fx-font-size: 15px;
-    -fx-pref-height: 50px;
-}
-
-.button {
-    -fx-background-color: #ff9199;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-pref-height: 50px;
-    -fx-pref-width: 84px;
-    -fx-text-fill: white;
-}
-
-.button:hover {
-    -fx-background-color: #ff6f7b;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #ff9199;
-    -fx-background-radius: 1em;
-}
+.root { -fx-background-color: #f7f8fa; -fx-font-family: "Segoe UI"; -fx-font-size: 14px; }
+.label { -fx-text-fill: #243542; }
+.header { -fx-padding: 20 24; -fx-background-color: white; -fx-border-color: transparent transparent #e4e8ec transparent; }
+.brand { -fx-background-color: #16766d; -fx-text-fill: white; -fx-padding: 10; -fx-background-radius: 12; -fx-font-weight: bold; }
+.title { -fx-font-size: 20; -fx-font-weight: bold; }
+.muted { -fx-font-size: 12; -fx-text-fill: #63717c; }
+.conversation { -fx-padding: 24; }
+.composer { -fx-padding: 16 24 20; -fx-background-color: white; -fx-border-color: #e4e8ec transparent transparent transparent; }
+.scroll-pane, .scroll-pane > .viewport { -fx-background-color: transparent; }
+.scroll-pane { -fx-padding: 0; }
+.text-field { -fx-background-color: #f7f8fa; -fx-background-radius: 12; -fx-border-color: #cbd4db; -fx-border-radius: 12; -fx-padding: 12 14; -fx-prompt-text-fill: #63717c; }
+.text-field:focused { -fx-border-color: #16766d; }
+.button { -fx-background-color: #16766d; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 13 20; -fx-font-weight: bold; }
+.button:hover { -fx-background-color: #105e57; }
+.button:focused { -fx-border-color: #243542; -fx-border-radius: 12; }
+.button:disabled { -fx-opacity: 0.45; }
+.titled-pane > .title { -fx-background-color: #f0f4f4; -fx-background-radius: 8; -fx-padding: 8 10; -fx-font-size: 12; }
+.titled-pane > .content { -fx-background-color: white; -fx-border-color: #e4e8ec; }
+.guide { -fx-padding: 12; -fx-font-size: 12; }
+.scroll-bar:vertical { -fx-background-color: transparent; -fx-pref-width: 10; }
+.scroll-bar .thumb { -fx-background-color: #c3cdcf; -fx-background-radius: 8; }

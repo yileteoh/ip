@@ -263,3 +263,20 @@ Six seven! I've sorted your tasks alphabetically:
 2.[E][X] banana task (from: Mon 2pm to: 4pm)
 3.[T][ ] zebra task
 ```
+
+## A-BetterGui: graphical checks
+
+The console syntax and checkpoints above are unchanged. GUI-only behavior:
+
+- Launch with Java 25: the window shows Bot67, a welcome message, and a collapsed command guide.
+- Empty or whitespace-only input disables Send. Enter or Send submits a nonempty command and returns focus to input.
+- In a fresh session, `list` displays `Your task list is empty. Try: todo read a book`.
+- `todo prepare project demo` adds a user bubble and bot confirmation.
+- `deadline` displays the normal error with a `Check your command` heading and a contrasting error style.
+- Open the command guide: examples are visible above the input; close it to recover conversation space.
+- Resize to 420 by 500 and then enlarge: the composer remains usable and messages wrap.
+- After enough messages to scroll, new replies become visible; older replies remain reachable by scrolling.
+- `bye` exits the application.
+
+Automated JavaFX smoke check passed for FXML loading, disabled empty Send, sending a task, displaying an error,
+and keeping the input usable at 420 by 500. The 640 by 720 scene snapshot was visually inspected.

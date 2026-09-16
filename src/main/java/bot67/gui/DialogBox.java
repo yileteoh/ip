@@ -34,6 +34,9 @@ public class DialogBox extends HBox {
         dialog.setText(text);
         displayPicture.setImage(image);
         cropToSquare(image);
+        displayPicture.setFitWidth(28);
+        displayPicture.setFitHeight(28);
+        dialog.maxWidthProperty().bind(widthProperty().subtract(48).multiply(0.85));
     }
 
     /** Creates a right-aligned user message. */
@@ -45,7 +48,15 @@ public class DialogBox extends HBox {
     public static DialogBox getBotDialog(String text, Image image) {
         DialogBox box = new DialogBox(text, image);
         box.flip();
+        box.dialog.maxWidthProperty().unbind();
+        box.dialog.maxWidthProperty().bind(box.widthProperty().subtract(48));
         return box;
+    }
+
+    /** Adds a textual cue as well as color to distinguish failed commands. */
+    public void highlightError() {
+        dialog.setText("Check your command\n" + dialog.getText());
+        dialog.getStyleClass().add("error-label");
     }
 
     /** Places the avatar on the left and applies the bot bubble style. */
