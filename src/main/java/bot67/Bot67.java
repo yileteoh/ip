@@ -47,7 +47,7 @@ public class Bot67 {
     private final Parser parser = new Parser();
     private final Storage storage = new Storage();
     private final TaskList tasks;
-    private boolean exitRequested;
+    private boolean isExitRequested;
 
     /** Loads saved tasks and prepares Bot67 to receive commands. */
     public Bot67() {
@@ -73,7 +73,7 @@ public class Bot67 {
     /** Processes one GUI command and returns Bot67's response without console separators. */
     public String getResponse(String input) {
         if (input.equals("bye")) {
-            exitRequested = true;
+            isExitRequested = true;
             return "Bye. Hope to see you again soon. Six Seven!";
         }
         ByteArrayOutputStream response = new ByteArrayOutputStream();
@@ -85,7 +85,7 @@ public class Bot67 {
 
     /** Returns whether the latest command requested application shutdown. */
     public boolean isExitRequested() {
-        return exitRequested;
+        return isExitRequested;
     }
 
     /** Executes one command using the supplied output UI. */
@@ -94,7 +94,7 @@ public class Bot67 {
             Command parsedCommand = parser.parse(command, PERSONALITY_ART);
             if (parsedCommand != null) {
                 parsedCommand.execute(tasks, ui, storage);
-                exitRequested = parsedCommand.isExit();
+                isExitRequested = parsedCommand.isExit();
             } else {
                 executeTaskCommand(command, ui);
             }

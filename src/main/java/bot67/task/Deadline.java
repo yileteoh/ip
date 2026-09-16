@@ -8,7 +8,7 @@ import bot67.parser.DateTimeParser;
 public class Deadline extends Task {
     private final String deadline;
     private final java.time.LocalDateTime deadlineDateTime;
-    private final boolean parsedDateTime;
+    private final boolean isDateTimeParsed;
     private final boolean hasTime;
 
     /**
@@ -26,21 +26,21 @@ public class Deadline extends Task {
             parsed = null;
         }
         this.deadlineDateTime = parsed;
-        this.parsedDateTime = parsed != null;
+        this.isDateTimeParsed = parsed != null;
         this.hasTime = this.deadline.matches("\\d{4}-\\d{2}-\\d{2}.*\\d{2}:\\d{2}");
     }
 
     /** Returns the task description including its deadline. */
     @Override
     public String getDescription() {
-        return super.getDescription() + " (by: " + (parsedDateTime
+        return super.getDescription() + " (by: " + (isDateTimeParsed
                 ? DateTimeParser.format(deadlineDateTime, hasTime) : deadline) + ")";
     }
 
     /** Returns the task in save-file format, preserving parsed date values. */
     @Override
     public String toFileFormat() {
-        String savedDeadline = parsedDateTime
+        String savedDeadline = isDateTimeParsed
                 ? (hasTime ? deadlineDateTime.toString() : deadlineDateTime.toLocalDate().toString()) : deadline;
         return super.toFileFormat() + " | " + savedDeadline;
     }

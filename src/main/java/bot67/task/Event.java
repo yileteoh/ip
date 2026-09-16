@@ -10,8 +10,8 @@ public class Event extends Task {
     private final String to;
     private final java.time.LocalDateTime fromDateTime;
     private final java.time.LocalDateTime toDateTime;
-    private final boolean fromHasTime;
-    private final boolean toHasTime;
+    private final boolean hasFromTime;
+    private final boolean hasToTime;
 
     /**
      * Creates an event task from a user command.
@@ -24,15 +24,15 @@ public class Event extends Task {
         this.to = command.substring(command.indexOf(" /to ") + 5);
         this.fromDateTime = parseOrNull(from);
         this.toDateTime = parseOrNull(to);
-        this.fromHasTime = hasTime(from);
-        this.toHasTime = hasTime(to);
+        this.hasFromTime = hasTime(from);
+        this.hasToTime = hasTime(to);
     }
 
     /** Returns the task description including its event interval. */
     @Override
     public String getDescription() {
-        String formattedFrom = fromDateTime == null ? from : DateTimeParser.format(fromDateTime, fromHasTime);
-        String formattedTo = toDateTime == null ? to : DateTimeParser.format(toDateTime, toHasTime);
+        String formattedFrom = fromDateTime == null ? from : DateTimeParser.format(fromDateTime, hasFromTime);
+        String formattedTo = toDateTime == null ? to : DateTimeParser.format(toDateTime, hasToTime);
         return super.getDescription() + " (from: " + formattedFrom + " to: " + formattedTo + ")";
     }
 
@@ -40,9 +40,9 @@ public class Event extends Task {
     @Override
     public String toFileFormat() {
         String savedFrom = fromDateTime == null ? from
-                : (fromHasTime ? fromDateTime.toString() : fromDateTime.toLocalDate().toString());
+                : (hasFromTime ? fromDateTime.toString() : fromDateTime.toLocalDate().toString());
         String savedTo = toDateTime == null ? to
-                : (toHasTime ? toDateTime.toString() : toDateTime.toLocalDate().toString());
+                : (hasToTime ? toDateTime.toString() : toDateTime.toLocalDate().toString());
         return super.toFileFormat() + " | " + savedFrom + " | " + savedTo;
     }
 
