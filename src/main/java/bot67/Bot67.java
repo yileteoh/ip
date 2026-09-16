@@ -103,6 +103,11 @@ public class Bot67 {
         return isExitRequested;
     }
 
+    /** Supplies the original ASCII banner to the graphical welcome message. */
+    public static String getBanner() {
+        return BANNER;
+    }
+
     /** Supplies the original Braille art for graphical rendering without font dependencies. */
     public static String getPersonalityArt() {
         return PERSONALITY_ART;

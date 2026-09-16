@@ -326,7 +326,7 @@ and keeping the input usable at 420 by 500. The 640 by 720 scene snapshot was vi
 
 Revision checks: the expanded guide uses 15px left-aligned text and scrolls within a bounded height. At 420 by 500, the input remains visible with the guide expanded. The header uses the bot picture at 48px; chat avatars are 44px with rounded corners. The conversation uses the original hearts background under a pale overlay and rose accents.
 
-The welcome message displays PERSONALITY_ART as drawn dots, without relying on Braille font support. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify the art fits at the minimum window width and scroll the guide to read its final lines.
+The welcome message displays the original ASCII BANNER in a 12px monospace font, followed by PERSONALITY_ART as drawn dots and the welcome text. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify both artworks fit without wrapping or clipping at the minimum window width and scroll the guide to read its final lines.
 
 App icon: launching the JavaFX application loads images/Bot67.png as the stage icon, matching the bot profile picture.
 
@@ -508,3 +508,7 @@ Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\d
 
 Automated JavaFX smoke check passed for loading the actual FXML, showing the startup storage warning,
 highlighting a reversed event-range error, and clearing the error style and input after a valid command.
+
+Banner regression check passed: the GUI displays the exact original BANNER in monospace, with its horizontal
+bounds inside both 420px and 640px windows. Snapshots at 420 by 500 and 640 by 720 were visually inspected;
+the smaller window scrolls to reveal the complete welcome bubble.

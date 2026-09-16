@@ -56,7 +56,7 @@ public class MainWindow extends AnchorPane {
         this.bot = bot;
         DialogBox welcome = DialogBox.getBotDialog(Ui.WELCOME + "\n\n"
                 + "Try: todo read a book\nOpen the command guide below for more ideas.", botImage);
-        welcome.showPersonalityArt(Bot67.getPersonalityArt());
+        welcome.showWelcomeArt(Bot67.getBanner(), Bot67.getPersonalityArt());
         dialogContainer.getChildren().add(welcome);
         if (!bot.getStartupWarning().isEmpty()) {
             DialogBox warning = DialogBox.getBotDialog(bot.getStartupWarning(), botImage);
