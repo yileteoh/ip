@@ -90,6 +90,11 @@ public class Bot67 {
         return isExitRequested;
     }
 
+    /** Supplies the original Braille art for graphical rendering without font dependencies. */
+    public static String getPersonalityArt() {
+        return PERSONALITY_ART;
+    }
+
     /** Reports failure separately from response text so the GUI can highlight errors. */
     public boolean isLastResponseError() {
         return isLastResponseError;

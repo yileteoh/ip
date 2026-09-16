@@ -53,9 +53,10 @@ public class MainWindow extends AnchorPane {
     /** Injects the application logic after FXML creates this controller. */
     public void setBot(Bot67 bot) {
         this.bot = bot;
-        dialogContainer.getChildren().add(
-                DialogBox.getBotDialog("Hello! I'm Bot67. Let's make room for what matters.\n\n"
-                        + "Try: todo read a book\nOpen the command guide below for more ideas.", botImage));
+        DialogBox welcome = DialogBox.getBotDialog("Hello! I'm Bot67. Let's make room for what matters.\n\n"
+                + "Try: todo read a book\nOpen the command guide below for more ideas.", botImage);
+        welcome.showPersonalityArt(Bot67.getPersonalityArt());
+        dialogContainer.getChildren().add(welcome);
     }
 
     /** Sends one command and displays the user and Bot67 messages. */

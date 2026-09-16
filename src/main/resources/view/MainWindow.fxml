@@ -19,7 +19,7 @@
    <TitledPane fx:id="commandGuide" text="Command guide" expanded="false" animated="false" minHeight="-Infinity">
     <ScrollPane fitToWidth="true" hbarPolicy="NEVER" minHeight="140" prefHeight="140" maxHeight="140">
     <Label wrapText="true" minHeight="-Infinity" maxWidth="Infinity" alignment="TOP_LEFT" styleClass="guide"
-     text="todo read a book&#10;deadline submit report /by 2026-10-15&#10;event meeting /from 2026-10-15T14:00 /to 2026-10-15T16:00&#10;list · find book · sort&#10;mark 1 · unmark 1 · delete 1 · bye" />
+     text="Replace &lt;...&gt; with your own values (omit the brackets).&#10;&#10;todo &lt;description&gt;&#10;deadline &lt;description&gt; /by &lt;date or time&gt;&#10;event &lt;description&gt; /from &lt;start&gt; /to &lt;end&gt;&#10;list&#10;find &lt;keyword&gt;&#10;sort&#10;mark &lt;task number&gt;&#10;unmark &lt;task number&gt;&#10;delete &lt;task number&gt;&#10;bye&#10;&#10;Use list to find task numbers.&#10;Dates: yyyy-MM-dd (2026-10-15)&#10;Date and time: yyyy-MM-ddTHH:mm (2026-10-15T14:00)&#10;Keep spaces before and after /by, /from, and /to." />
     </ScrollPane>
    </TitledPane>
    <HBox spacing="10" alignment="CENTER">

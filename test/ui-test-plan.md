@@ -282,3 +282,5 @@ Automated JavaFX smoke check passed for FXML loading, disabled empty Send, sendi
 and keeping the input usable at 420 by 500. The 640 by 720 scene snapshot was visually inspected.
 
 Revision checks: the expanded guide uses 15px left-aligned text and scrolls within a bounded height. At 420 by 500, the input remains visible with the guide expanded. The header uses the bot picture at 48px; chat avatars are 44px with rounded corners. The conversation uses the original hearts background under a pale overlay and rose accents.
+
+The welcome message displays PERSONALITY_ART as drawn dots, without relying on Braille font support. The guide lists all ten commands separately using angle-bracket placeholders, explains that brackets are omitted, and includes date formats and spacing guidance. Verify the art fits at the minimum window width and scroll the guide to read its final lines.

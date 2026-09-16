@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -62,6 +63,13 @@ public class DialogBox extends HBox {
     public void highlightError() {
         dialog.setText("Check your command\n" + dialog.getText());
         dialog.getStyleClass().add("error-label");
+    }
+
+    /** Places font-independent personality art below the welcome text. */
+    public void showPersonalityArt(String art) {
+        dialog.setGraphic(new PersonalityArt(art));
+        dialog.setContentDisplay(ContentDisplay.BOTTOM);
+        dialog.setGraphicTextGap(12);
     }
 
     /** Places the avatar on the left and applies the bot bubble style. */
