@@ -1,80 +1,125 @@
 package bot67.storage;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
+import bot67.exception.Bot67Exception;
+import bot67.parser.Parser;
 import bot67.task.Deadline;
 import bot67.task.Event;
 import bot67.task.Task;
 import bot67.task.Todo;
 
-/** Writes Bot67 tasks to the local save file. */
+/** Loads validated task records and replaces the save file only after a complete write. */
 public class Storage {
-    private static final Path SAVE_FILE = Path.of("data", "duke.txt");
+    private final Path saveFile;
 
-    /**
-     * Saves all tasks to disk using one task per line.
-     *
-     * @param tasks the tasks to save
-     * @throws IOException if the file cannot be written
-     */
-    public void save(List<Task> tasks) throws IOException {
-        Files.createDirectories(SAVE_FILE.getParent());
-        Files.write(SAVE_FILE, tasks.stream().map(Task::toFileFormat).toList());
+    /** Uses the existing relative save path so previously saved tasks remain available. */
+    public Storage() {
+        this(Path.of("data", "duke.txt"));
+    }
+
+    /** Uses an explicit save path, allowing isolated tests without touching user data. */
+    public Storage(Path saveFile) {
+        this.saveFile = saveFile;
+    }
+
+    /** Returns the file to check when a load or save fails. */
+    public Path getSaveFile() {
+        return saveFile;
     }
 
     /**
-     * Loads valid tasks from the save file. A missing file represents an empty task list.
-     * Invalid lines are ignored so that one malformed task does not prevent Duke from starting.
+     * Writes to a temporary sibling, then atomically replaces the save file.
+     * If the filesystem cannot do an atomic replacement, saving fails safely.
+     *
+     * @param tasks the tasks to save
+     * @throws IOException if writing or replacing the file fails
+     */
+    public void save(List<Task> tasks) throws IOException {
+        Path target = saveFile.toAbsolutePath();
+        Files.createDirectories(target.getParent());
+        if (Files.exists(target, LinkOption.NOFOLLOW_LINKS)
+                && (!Files.isRegularFile(target, LinkOption.NOFOLLOW_LINKS) || !Files.isWritable(target))) {
+            throw new AccessDeniedException(target.toString());
+        }
+        Path temporary = Files.createTempFile(target.getParent(), "bot67-", ".tmp");
+        try {
+            Files.write(temporary, tasks.stream().map(Task::toFileFormat).toList());
+            Files.move(temporary, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            // Cleanup must not turn a successful replacement into a reported save failure.
+            try {
+                Files.deleteIfExists(temporary);
+            } catch (IOException | SecurityException ignored) {
+                // An unused temporary file can be removed later; the save file is unaffected.
+            }
+        }
+    }
+
+    /**
+     * Loads the entire file, accepting a missing file as an empty first session.
+     * Rejects malformed records instead of silently discarding them on the next save.
      *
      * @return the tasks read from the save file
-     * @throws IOException if the file cannot be read
+     * @throws IOException if the file cannot be read or contains an invalid record
      */
     public ArrayList<Task> load() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(SAVE_FILE)) {
-            return tasks;
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(saveFile);
+        } catch (NoSuchFileException e) {
+            return new ArrayList<>();
         }
-
-        for (String line : Files.readAllLines(SAVE_FILE)) {
-            Task task = parseTask(line);
-            if (task != null) {
-                tasks.add(task);
+        ArrayList<Task> tasks = new ArrayList<>();
+        for (int i = 0; i < lines.size(); i++) {
+            try {
+                tasks.add(parseTask(lines.get(i)));
+            } catch (Bot67Exception | IllegalArgumentException e) {
+                throw new IOException("Invalid saved task at line " + (i + 1) + ".", e);
             }
         }
         return tasks;
     }
 
-    /** Converts one saved line into a task, ignoring malformed records. */
-    private Task parseTask(String line) {
-        String[] parts = line.split("\\s+\\|\\s+", -1);
-        try {
-            if (parts.length == 3 && parts[0].equals("T")) {
-                return createTask("todo " + parts[2], parts[1], new Todo("todo " + parts[2]));
+    /** Validates every field using the same rules as commands before constructing a task. */
+    private Task parseTask(String line) throws Bot67Exception {
+        String[] parts = line.split("\\|", -1);
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].strip();
+            if (parts[i].isEmpty()) {
+                throw new IllegalArgumentException("Empty saved field");
             }
-            if (parts.length == 4 && parts[0].equals("D")) {
-                String command = "deadline " + parts[2] + " /by " + parts[3];
-                return createTask(command, parts[1], new Deadline(command));
-            }
-            if (parts.length == 5 && parts[0].equals("E")) {
-                String command = "event " + parts[2] + " /from " + parts[3] + " /to " + parts[4];
-                return createTask(command, parts[1], new Event(command));
-            }
-        } catch (RuntimeException e) {
-            return null;
         }
-        return null;
-    }
-
-    /** Applies a saved completion status to a newly created task. */
-    private Task createTask(String command, String status, Task task) {
-        if (status.equals("1")) {
+        if (parts.length < 3 || !(parts[1].equals("0") || parts[1].equals("1"))) {
+            throw new IllegalArgumentException("Invalid saved status or field count");
+        }
+        Parser parser = new Parser();
+        Task task;
+        if (parts.length == 3 && parts[0].equals("T")) {
+            String command = parser.normalize("todo " + parts[2]);
+            parser.requireText(command.substring(5));
+            task = new Todo(command);
+        } else if (parts.length == 4 && parts[0].equals("D")) {
+            String command = parser.normalize("deadline " + parts[2] + " /by " + parts[3]);
+            parser.requireValidDeadline(command);
+            task = new Deadline(command);
+        } else if (parts.length == 5 && parts[0].equals("E")) {
+            String command = parser.normalize("event " + parts[2] + " /from " + parts[3] + " /to " + parts[4]);
+            parser.requireValidEvent(command);
+            task = new Event(command);
+        } else {
+            throw new IllegalArgumentException("Invalid saved task type or field count");
+        }
+        if (parts[1].equals("1")) {
             task.mark();
-        } else if (!status.equals("0")) {
-            return null;
         }
         return task;
     }

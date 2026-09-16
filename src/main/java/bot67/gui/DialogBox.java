@@ -61,7 +61,7 @@ public class DialogBox extends HBox {
 
     /** Adds a textual cue as well as color to distinguish failed commands. */
     public void highlightError() {
-        dialog.setText("Check your command\n" + dialog.getText());
+        dialog.setText("Something needs attention\n" + dialog.getText());
         dialog.getStyleClass().add("error-label");
     }
 

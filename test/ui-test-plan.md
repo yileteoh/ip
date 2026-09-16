@@ -315,7 +315,7 @@ The console syntax is unchanged; personality replies use the checkpoints above. 
 - Empty or whitespace-only input disables Send. Enter or Send submits a nonempty command and returns focus to input.
 - In a fresh session, `list` displays `Six seven! No tasks in the list yet. Let's start small: todo read a book`.
 - `todo prepare project demo` adds a user bubble and bot confirmation.
-- `deadline` displays the normal error with a `Check your command` heading and a contrasting error style.
+- `deadline` displays the normal error with a `Something needs attention` heading and a contrasting error style.
 - Open the command guide: examples are visible above the input; close it to recover conversation space.
 - Resize to 420 by 500 and then enlarge: the composer remains usable and messages wrap.
 - After enough messages to scroll, new replies become visible; older replies remain reachable by scrolling.
@@ -421,3 +421,90 @@ SIX SEVEN! Event start must be before its end.
 SIX SEVEN! Event start must be before its end.
 1.[D][ ] leap day (by: Feb 29 2028)
 ```
+
+## Test 16: Damaged save file is protected
+
+Aim: Warn on startup, identify the damaged line, and refuse to overwrite the original file.
+Setup: Create `data/duke.txt` with the following exact content before starting Bot67:
+
+```text
+T | 0 | keep this task
+D | 0 | impossible date | 2026-02-30
+```
+
+Input commands:
+
+```text
+todo replacement
+sort
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Could not load saved tasks. No tasks were loaded; changes are disabled to protect your file.
+Check data/duke.txt and restart Bot67.
+Invalid saved task at line 2.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+Bye. Hope to see you again soon. Six Seven!
+```
+
+Also verify that the save file's contents are unchanged. On Windows, accept `data\duke.txt` in path messages.
+
+## Test 17: Unreadable save path is protected
+
+Aim: Treat a directory at the save-file path as an error, not an empty first session.
+Setup: Create a directory at `data/duke.txt` before starting Bot67.
+
+Input commands:
+
+```text
+todo replacement
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Could not load saved tasks. No tasks were loaded; changes are disabled to protect your file.
+Check data/duke.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+Bye. Hope to see you again soon. Six Seven!
+```
+
+Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\duke.txt` in path messages.
+
+## Test 18: Save failure leaves the list unchanged
+
+Aim: A failed first save reports a storage error and rolls back the new task.
+Setup: Start Bot67 with no save file. After the welcome message, create a directory at `data/duke.txt`.
+
+Input commands:
+
+```text
+todo unsaved task
+list
+bye
+```
+
+Expected output checkpoints, in order:
+
+```text
+SIX SEVEN! Could not save tasks. Your change was not applied. Check data/duke.txt and its folder permissions, then try again.
+Six seven! No tasks in the list yet. Let's start small: todo read a book
+Bye. Hope to see you again soon. Six Seven!
+```
+
+Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\duke.txt` in path messages.
+
+### A-MoreErrorHandling: graphical checks
+
+- A corrupt or unreadable save file shows a startup warning with the `Something needs attention` heading.
+- Storage failures and command errors use the same contrasting error style.
+- Correcting invalid input lets the next valid response return to normal styling.
+- A save failure reports that the change was not applied; `list` still shows the previous tasks.
+
+Automated JavaFX smoke check passed for loading the actual FXML, showing the startup storage warning,
+highlighting a reversed event-range error, and clearing the error style and input after a valid command.

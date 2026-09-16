@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -45,14 +46,27 @@ public class Bot67 {
             + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠹⢅⣀⠹⠒⠊⠀⠀⠀⠠";
 
     private final Parser parser = new Parser();
-    private final Storage storage = new Storage();
+    private final Storage storage;
     private final TaskList tasks;
+    private String startupWarning = "";
+    private boolean isStorageBlocked;
     private boolean isExitRequested;
     private boolean isLastResponseError;
 
     /** Loads saved tasks and prepares Bot67 to receive commands. */
     public Bot67() {
+        this(new Storage());
+    }
+
+    /** Loads tasks through the supplied storage, including isolated storage used by tests. */
+    public Bot67(Storage storage) {
+        this.storage = storage;
         this.tasks = new TaskList(loadTasks());
+    }
+
+    /** Returns a startup warning for both interfaces, or an empty string after a successful load. */
+    public String getStartupWarning() {
+        return startupWarning;
     }
 
     /** Starts the original text interface, which remains useful for automated testing. */
@@ -60,6 +74,9 @@ public class Bot67 {
         Bot67 bot = new Bot67();
         Ui ui = new Ui();
         ui.showWelcome(BANNER);
+        if (!bot.getStartupWarning().isEmpty()) {
+            ui.showError(bot.getStartupWarning());
+        }
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             ui.showSeparator();
@@ -202,9 +219,17 @@ public class Bot67 {
     }
 
     /** Sorts tasks alphabetically, saves the new order, and displays it. */
-    private void sortTasks(Ui ui) {
+    private void sortTasks(Ui ui) throws Bot67Exception {
+        requireWritableStorage();
+        List<Task> previousOrder = new ArrayList<>(tasks.asList());
         tasks.sortByName();
-        saveTasks();
+        try {
+            saveTasks();
+        } catch (Bot67Exception e) {
+            tasks.asList().clear();
+            tasks.asList().addAll(previousOrder);
+            throw e;
+        }
         ui.showLine("Six seven! I've sorted your tasks alphabetically. Even 67 likes a little order:");
         showTaskRows(ui);
     }
@@ -230,14 +255,28 @@ public class Bot67 {
     /** Marks or unmarks the task at the supplied position. */
     private void changeTaskStatus(String value, boolean isDone, Ui ui) throws Bot67Exception {
         int taskNumber = requireExistingTaskNumber(value);
+        requireWritableStorage();
+        Task task = tasks.get(taskNumber);
+        boolean wasDone = task.getStatusIcon().equals("X");
         if (isDone) {
-            tasks.mark(taskNumber);
+            task.mark();
+        } else {
+            task.unmark();
+        }
+        try {
             saveTasks();
+        } catch (Bot67Exception e) {
+            if (wasDone) {
+                task.mark();
+            } else {
+                task.unmark();
+            }
+            throw e;
+        }
+        if (isDone) {
             ui.showLine("Six seven! One task down! I've marked this task as done:",
                     "  [X] " + tasks.get(taskNumber).getName());
         } else {
-            tasks.unmark(taskNumber);
-            saveTasks();
             ui.showLine("Six seven! Another round? I've marked this task as not done yet:",
                     "  [ ] " + tasks.get(taskNumber).getName());
         }
@@ -255,17 +294,29 @@ public class Bot67 {
     /** Deletes the task at the supplied position. */
     private void deleteTask(String value, Ui ui) throws Bot67Exception {
         int taskNumber = requireExistingTaskNumber(value);
+        requireWritableStorage();
         Task deletedTask = tasks.delete(taskNumber);
-        saveTasks();
+        try {
+            saveTasks();
+        } catch (Bot67Exception e) {
+            tasks.asList().add(taskNumber - 1, deletedTask);
+            throw e;
+        }
         ui.showLine("Six seven. Making room! I've removed this task:",
                 "  " + deletedTask.getDescription(),
                 "Now you have " + taskCount() + " in the list.");
     }
 
     /** Adds and saves one task. */
-    private void addTask(Task task, Ui ui) {
+    private void addTask(Task task, Ui ui) throws Bot67Exception {
+        requireWritableStorage();
         tasks.add(task);
-        saveTasks();
+        try {
+            saveTasks();
+        } catch (Bot67Exception e) {
+            tasks.delete(tasks.size());
+            throw e;
+        }
         ui.showLine("Six seven! On it. I've added this task:",
                 "  " + task.getDescription(),
                 "You have " + taskCount() + " in the list. 67!");
@@ -276,21 +327,37 @@ public class Bot67 {
         return tasks.size() + (tasks.size() == 1 ? " task" : " tasks");
     }
 
-    /** Loads saved tasks, falling back to an empty list if reading fails. */
+    /** Stops writes after a failed load so an unreadable file cannot be overwritten. */
+    private void requireWritableStorage() throws Bot67Exception {
+        if (isStorageBlocked) {
+            throw new Bot67Exception("Changes are disabled because saved tasks could not be loaded. "
+                    + "Fix " + storage.getSaveFile() + " and restart Bot67.");
+        }
+    }
+
+    /** Warns and disables changes if the entire save file cannot be loaded safely. */
     private List<Task> loadTasks() {
         try {
             return storage.load();
-        } catch (IOException e) {
+        } catch (IOException | SecurityException e) {
+            isStorageBlocked = true;
+            startupWarning = "Could not load saved tasks. No tasks were loaded; "
+                    + "changes are disabled to protect your file."
+                    + "\nCheck " + storage.getSaveFile() + " and restart Bot67.";
+            if (e.getMessage() != null && e.getMessage().startsWith("Invalid saved task at line ")) {
+                startupWarning += "\n" + e.getMessage();
+            }
             return List.of();
         }
     }
 
     /** Saves the current task list. */
-    private void saveTasks() {
+    private void saveTasks() throws Bot67Exception {
         try {
             storage.save(tasks.asList());
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to save tasks", e);
+        } catch (IOException | SecurityException e) {
+            throw new Bot67Exception("Could not save tasks. Your change was not applied. Check "
+                    + storage.getSaveFile() + " and its folder permissions, then try again.");
         }
     }
 }
