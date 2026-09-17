@@ -41,6 +41,21 @@ class StorageTest {
     }
 
     @Test
+    void defaultStorage_importsLegacyTasksAndSavesToBot67File() throws IOException {
+        Path bot67File = directory.resolve("data/bot67.txt");
+        Path legacyFile = directory.resolve("data/duke.txt");
+        Files.createDirectories(legacyFile.getParent());
+        Files.writeString(legacyFile, "T | 1 | retained task\n");
+
+        Storage storage = new Storage(bot67File, legacyFile);
+        assertEquals("[T][X] retained task", storage.load().getFirst().getDescription());
+        assertEquals(legacyFile, storage.getLoadFile());
+        storage.save(storage.load());
+        assertTrue(Files.exists(bot67File));
+        assertTrue(Files.exists(legacyFile));
+    }
+
+    @Test
     void load_rejectsCorruptRecordsWithoutChangingTheFile() throws IOException {
         Path file = directory.resolve("tasks.txt");
         for (String record : List.of("T | 2 | bad status", "T | 0 | ", "X | 0 | unknown",

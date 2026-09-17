@@ -19,21 +19,38 @@ import bot67.task.Todo;
 
 /** Loads validated task records and replaces the save file only after a complete write. */
 public class Storage {
-    private final Path saveFile;
+    private static final Path DEFAULT_SAVE_FILE = Path.of("data", "bot67.txt");
+    private static final Path LEGACY_SAVE_FILE = Path.of("data", "duke.txt");
 
-    /** Uses the existing relative save path so previously saved tasks remain available. */
+    private final Path saveFile;
+    private final Path legacySaveFile;
+    private Path loadFile;
+
+    /** Uses Bot67's save path while retaining read compatibility with the old Duke path. */
     public Storage() {
-        this(Path.of("data", "duke.txt"));
+        this(DEFAULT_SAVE_FILE, LEGACY_SAVE_FILE);
     }
 
     /** Uses an explicit save path, allowing isolated tests without touching user data. */
     public Storage(Path saveFile) {
+        this(saveFile, null);
+    }
+
+    /** Creates storage with an optional read-only fallback for data from an older product name. */
+    Storage(Path saveFile, Path legacySaveFile) {
         this.saveFile = saveFile;
+        this.legacySaveFile = legacySaveFile;
+        this.loadFile = saveFile;
     }
 
     /** Returns the file to check when a load or save fails. */
     public Path getSaveFile() {
         return saveFile;
+    }
+
+    /** Returns the current file used for loading, including the legacy fallback when needed. */
+    public Path getLoadFile() {
+        return loadFile;
     }
 
     /**
@@ -72,9 +89,15 @@ public class Storage {
      * @throws IOException if the file cannot be read or contains an invalid record
      */
     public ArrayList<Task> load() throws IOException {
+        Path fileToLoad = saveFile;
+        if (!Files.exists(fileToLoad, LinkOption.NOFOLLOW_LINKS)
+                && legacySaveFile != null && Files.exists(legacySaveFile, LinkOption.NOFOLLOW_LINKS)) {
+            fileToLoad = legacySaveFile;
+        }
+        loadFile = fileToLoad;
         List<String> lines;
         try {
-            lines = Files.readAllLines(saveFile);
+            lines = Files.readAllLines(fileToLoad);
         } catch (NoSuchFileException e) {
             return new ArrayList<>();
         }

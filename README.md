@@ -1,25 +1,27 @@
-# Duke project template
+# Bot67
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Bot67 is a desktop task manager with a cheerful six-seven personality. It supports todos, deadlines, events,
+task completion, deletion, keyword search, alphabetical sorting, and persistent local storage.
 
-## Setting up in Intellij
+See the [Bot67 User Guide](docs/README.md) for commands and usage details.
 
-Prerequisites: JDK 25, update Intellij to the most recent version.
+## Running Bot67
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Bot67.java` file, right-click it, and choose `Run Bot67.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   _____       ___    __  ______
-   | __ )  ___ | |_  / /  |___  |
-   |  _ \ / _ \| __|/ /_     / /
-   | |_) | (_) | |_| '_ \   / /
-   |____/ \___/ \__|\___/  /_/
-   ```
+Bot67 requires Java 25.
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+1. Clone this repository and open it in IntelliJ IDEA as a Gradle project.
+2. Configure the project SDK and Gradle JVM to use JDK 25.
+3. Run `./gradlew run` on macOS/Linux or `gradlew.bat run` on Windows.
+
+To build the cross-platform fat JAR, run `./gradlew clean shadowJar`. The generated file is
+`build/libs/bot67.jar`.
+
+## Credits
+
+- This project began from the NUS CS2103T individual-project template and follows the course's Duke tutorial
+  progression.
+- The JavaFX structure was adapted from the JavaFX tutorial supplied with the CS2103T individual-project template.
+- `Background.png`, `Bot67.png`, and `User.png` were selected through Google Images from images represented as
+  reusable. The original source links were not retained; attribution is recorded here transparently rather than
+  claiming the artwork as original.
+- Development used OpenAI Codex for code review, implementation support, test design, and documentation refinement.
