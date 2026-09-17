@@ -5,13 +5,23 @@ task completion, deletion, keyword search, alphabetical sorting, and persistent 
 
 See the [Bot67 User Guide](docs/README.md) for commands and usage details.
 
-## Running Bot67
+## Setting up in IntelliJ IDEA
 
-Bot67 requires Java 25.
+Prerequisites: install JDK 25 and update IntelliJ IDEA to a recent version.
 
-1. Clone this repository and open it in IntelliJ IDEA as a Gradle project.
-2. Configure the project SDK and Gradle JVM to use JDK 25.
-3. Run `./gradlew run` on macOS/Linux or `gradlew.bat run` on Windows.
+1. Open IntelliJ IDEA. If another project is open, select **File → Close Project** first.
+2. Select **Open**, choose this repository's folder, and accept the default prompts.
+3. Open **File → Project Structure → Project** and select JDK 25 as the project SDK. Keep the language level at
+   **SDK default**.
+4. Open **Settings → Build, Execution, Deployment → Build Tools → Gradle** and select JDK 25 as the Gradle JVM.
+5. Let IntelliJ finish importing the Gradle project and downloading its dependencies.
+6. Open the Gradle tool window and run **Tasks → application → run**. Alternatively, run
+   `gradlew.bat run` in IntelliJ's terminal on Windows, or `./gradlew run` on macOS/Linux.
+
+If IntelliJ shows compilation errors immediately after setup, reload the Gradle project or restart IntelliJ after
+confirming both Java settings use JDK 25.
+
+## Building the JAR
 
 To build the cross-platform fat JAR, run `./gradlew clean shadowJar`. The generated file is
 `build/libs/bot67.jar`.

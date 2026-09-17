@@ -2,6 +2,8 @@
 
 Bot67 is a desktop task manager that accepts short text commands and stores your tasks between sessions.
 
+![Bot67 task manager interface](Ui.png)
+
 ## Quick start
 
 Type a command into the box at the bottom of the window and press **Enter** or **Send**. Commands are
