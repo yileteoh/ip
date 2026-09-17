@@ -22,14 +22,92 @@ case-sensitive. Replace values in angle brackets with your own text and omit the
 | Delete a task | `delete <task number>` | `delete 2` |
 | Exit | `bye` | `bye` |
 
-## Working with tasks
+## Adding tasks
 
-Use `list` to see each task's current number. Bot67 displays todos as `[T]`, deadlines as `[D]`, and events as
-`[E]`. An `X` indicates a completed task. Task numbers can change after deletion or sorting, so run `list` before
-using `mark`, `unmark`, or `delete` when unsure.
+### Adding a todo: `todo`
 
-`find` shows tasks whose displayed description contains the exact keyword. `sort` orders every task
-case-insensitively by description while preserving its type, status, dates, and saved data.
+Use a todo for a task without a fixed date or time.
+
+- Format: `todo <description>`
+- Example: `todo borrow a library book`
+- Result: Bot67 adds `[T][ ] borrow a library book` and reports the new number of tasks.
+
+### Adding a deadline: `deadline`
+
+Use a deadline for work that must be completed by a particular date or time.
+
+- Format: `deadline <description> /by <date or time>`
+- Example: `deadline submit report /by 2026-10-15 18:00`
+- Result: Bot67 adds `[D][ ] submit report (by: Oct 15 2026 18:00)`.
+
+The `/by` marker is required and may appear only once.
+
+### Adding an event: `event`
+
+Use an event for an activity with a start and an end.
+
+- Format: `event <description> /from <start> /to <end>`
+- Example: `event project meeting /from 2026-10-15T14:00 /to 2026-10-15T16:00`
+- Result: Bot67 adds an `[E]` task and displays both endpoints in a readable format.
+
+The `/from` marker must come before `/to`, and each marker may appear only once.
+
+## Viewing and organizing tasks
+
+### Showing the task list: `list`
+
+Enter `list` to display every task in its current numbered order. For example:
+
+```text
+1.[T][ ] borrow a library book
+2.[D][ ] submit report (by: Oct 15 2026 18:00)
+3.[E][X] project meeting (from: Oct 15 2026 14:00 to: Oct 15 2026 16:00)
+```
+
+The first letter identifies the type: `[T]` for todo, `[D]` for deadline, and `[E]` for event. The second pair of
+brackets shows status: `[ ]` means incomplete and `[X]` means completed.
+
+### Finding tasks: `find`
+
+- Format: `find <keyword>`
+- Example: `find report`
+
+Bot67 shows every task whose displayed description contains the exact keyword and keeps each task's original list
+number. If nothing matches, Bot67 says so without changing the task list.
+
+### Sorting tasks: `sort`
+
+Enter `sort` to arrange all tasks alphabetically by description. Sorting is case-insensitive and preserves task
+types, completion states, dates, and event times. The sorted order is saved automatically.
+
+## Updating tasks
+
+### Marking a task as completed: `mark`
+
+- Format: `mark <task number>`
+- Example: `mark 2`
+
+Bot67 changes the selected task's status from `[ ]` to `[X]`.
+
+### Marking a task as incomplete: `unmark`
+
+- Format: `unmark <task number>`
+- Example: `unmark 2`
+
+Bot67 changes the selected task's status from `[X]` back to `[ ]`.
+
+### Deleting a task: `delete`
+
+- Format: `delete <task number>`
+- Example: `delete 2`
+
+Bot67 displays the removed task and the number of remaining tasks. Tasks below it are renumbered immediately.
+
+Task numbers can also change after sorting, so use `list` before `mark`, `unmark`, or `delete` when unsure.
+
+## Exiting Bot67
+
+Enter `bye` to close Bot67. Your latest successful changes are already saved, so no separate save command is needed.
 
 ## Dates and times
 
@@ -62,6 +140,28 @@ Tasks are stored in `data/bot67.txt`, relative to the folder where Bot67 starts.
 A missing save file starts an empty list. If a file cannot be read or contains an invalid task, Bot67 loads no tasks
 and disables changes to protect the original data. Back up the file, fix the reported record or permissions, and
 restart Bot67. If saving fails, the requested change is undone so the in-memory list remains consistent.
+
+## Troubleshooting
+
+### Bot67 says a task number is out of range
+
+Run `list` and use one of the numbers currently shown. Deleting or sorting tasks can change their numbers.
+
+### A date or time is rejected
+
+Check that the date exists and that its month, day, hour, and minute use the required number of digits. For example,
+use `2026-02-28`, not the impossible date `2026-02-30`. For an event, also ensure the structured start is earlier
+than the structured end.
+
+### Changes are disabled at startup
+
+Bot67 could not safely read the save file. Follow the path shown in the error, back up that file, and correct its
+contents or permissions before restarting. Bot67 deliberately avoids overwriting data it could not understand.
+
+### A change could not be saved
+
+The attempted change was rolled back. Check that the `data` folder is writable, `data/bot67.txt` is a regular file,
+and the drive has available space, then retry the command.
 
 ## Credits
 
