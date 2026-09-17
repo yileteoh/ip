@@ -1,6 +1,13 @@
 # Text UI test plan
 
-The application is compiled with Java 25 and run as `Bot67`. Each test ends with `bye` so the session terminates cleanly.
+Compile with Java 25 and run the console entry point `bot67.Bot67` (the packaged JAR starts the JavaFX GUI).
+Run each numbered test in a separate, empty working directory, applying that test's setup before sending commands.
+This prevents saved tasks from an earlier test changing task numbers or expected counts. Each test ends with `bye`
+so the session terminates cleanly. Check the expected output checkpoints in order; English month names assume an
+English locale. Use `-Duser.language=en -Duser.country=US` when running the console tests for consistent date output.
+
+The pass notes below record earlier runs, not a guarantee that the current checkout passes. Record new run results
+separately. The graphical checks require the JavaFX application and are not covered by console checkpoints alone.
 
 ## Test 1: Add and list all Level-4 task types
 

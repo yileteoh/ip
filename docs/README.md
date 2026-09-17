@@ -1,10 +1,47 @@
 # Bot67 User Guide
 
-Bot67 is a desktop task manager that accepts short text commands and stores your tasks between sessions.
+Bot67 helps you keep track of everyday tasks, deadlines, and events through short text commands.
+Add what you need to do, mark it complete, and pick up where you left off next time. Your tasks are saved on your
+computer automatically, with a little six-seven encouragement along the way.
 
 ![Bot67 task manager interface](Ui.png)
 
-## Quick start
+## Getting started
+
+1. Install **Java 25**. Open a terminal (PowerShell on Windows or Terminal on macOS/Linux) and run
+   `java -version` to check that the version begins with `25`.
+2. Visit the [Bot67 releases page](https://github.com/yileteoh/ip/releases) and download the `.jar` asset from the
+   release you want to use. If no JAR has been published yet, use the
+   [build instructions in the repository](https://github.com/yileteoh/ip#building-the-jar).
+3. Put the JAR in a folder you can write to, such as a new `Bot67` folder in your Documents folder.
+4. Open a terminal in that folder and run `java -jar bot67.jar`. If your downloaded file has a different name,
+   replace `bot67.jar` with that name, keeping quotes around names containing spaces.
+5. When the Bot67 window opens, type `todo read book` in the box at the bottom and press **Enter** or click
+   **Send**. Then enter `list` to see your task.
+
+Always launch from the same folder to use the same saved task list. JavaFX is included in the packaged JAR;
+you do not need to install it separately.
+
+### Try your first task
+
+In a new, empty task list, enter these commands **one at a time**:
+
+```text
+todo read book
+list
+mark 1
+list
+bye
+```
+
+The task first appears as `1.[T][ ] read book`, then as `1.[T][X] read book` after you mark it complete.
+`bye` closes the window. Launch Bot67 again and enter `list`: your completed task is still there.
+If you already have tasks, use the number shown by `list` for the task you want to mark.
+
+Open **Command guide** above the input box for a quick reminder while using the app. You can resize the window
+and scroll through earlier replies. An empty input keeps **Send** disabled.
+
+## Command reference
 
 Type a command into the box at the bottom of the window and press **Enter** or **Send**. Commands are
 case-sensitive. Replace values in angle brackets with your own text and omit the brackets.
@@ -75,6 +112,11 @@ brackets shows status: `[ ]` means incomplete and `[X]` means completed.
 Bot67 shows every task whose displayed description contains the exact keyword and keeps each task's original list
 number. If nothing matches, Bot67 says so without changing the task list.
 
+Search is **case-sensitive** and matches part of the displayed task text: `find book` matches `read book`, but
+`find Book` does not. A phrase such as `find read book` must appear together in that order. Search also includes
+the displayed type, status, and dates, so `find [X]` finds completed tasks. Searching does not renumber or filter
+the underlying list: use the number shown beside a result with `mark`, `unmark`, or `delete`.
+
 ### Sorting tasks: `sort`
 
 Enter `sort` to arrange all tasks alphabetically by description. Sorting is case-insensitive and preserves task
@@ -102,6 +144,7 @@ Bot67 changes the selected task's status from `[X]` back to `[ ]`.
 - Example: `delete 2`
 
 Bot67 displays the removed task and the number of remaining tasks. Tasks below it are renumbered immediately.
+There is no undo command. To restore an accidentally deleted task, add it again with `todo`, `deadline`, or `event`.
 
 Task numbers can also change after sorting, so use `list` before `mark`, `unmark`, or `delete` when unsure.
 
@@ -120,12 +163,22 @@ Bot67 accepts these structured formats:
 Structured dates are checked for impossible values. For events with two structured values, the start must be before
 the end. Free-form values such as `Sunday` and `Mon 2pm` are also accepted, although Bot67 cannot compare their order.
 
+Use 24-hour times: `14:00` means 2 pm. A date without a time is treated as midnight when checking event order,
+so an all-day event cannot use the same start and end date. Use explicit times for an event within one day.
+Free-form dates remain text; `Sunday` is not converted into a calendar date. Dates help you record a schedule;
+Bot67 does not send reminders or automatically complete overdue tasks. Month names in displayed dates may vary
+with your computer's language settings; the examples here use English.
+
 ## Command rules
 
 Extra spaces and tabs are collapsed to one space, including inside task descriptions. Use `/by` exactly once for a
 deadline and `/from` followed by `/to` exactly once for an event, with spaces around each marker. Descriptions and
 date values cannot be empty. The pipe character (`|`) and control characters other than tabs are rejected because
 saved tasks use pipe-separated records. Duplicate tasks are allowed.
+
+For deadlines and events, avoid other words beginning with `/` after a space: Bot67 treats these as parameters
+and rejects unrecognized ones. Enter one command at a time; there is no edit command, so replace a task by deleting
+it and adding the corrected version.
 
 `list`, `sort`, and `bye` take no arguments. Task numbers must be positive whole numbers that exist in the current
 list. When a command is invalid, Bot67 highlights the error and provides specific guidance; correct the command and
@@ -141,7 +194,24 @@ A missing save file starts an empty list. If a file cannot be read or contains a
 and disables changes to protect the original data. Back up the file, fix the reported record or permissions, and
 restart Bot67. If saving fails, the requested change is undone so the in-memory list remains consistent.
 
+To back up your tasks, close Bot67 and copy `data/bot67.txt` somewhere safe. To restore a backup, close Bot67,
+keep a copy of the current file, and put the backup back at `data/bot67.txt`. When moving to another folder or
+computer, bring both the JAR and the `data` folder. Chat messages are not saved; use `list` after restarting to
+see your tasks. Avoid opening multiple Bot67 sessions against the same save file, as each session saves its own list.
+
 ## Troubleshooting
+
+### The application will not start
+
+Run `java -version` in the same terminal and confirm Java 25 is active. If `java` is not recognized, install Java 25
+and make its `bin` folder available on your system's `PATH`, then reopen the terminal. If you see
+`Unable to access jarfile`, check the filename and open the terminal in the folder containing the JAR.
+Use `java -jar bot67.jar` to see any startup error instead of double-clicking the file.
+
+### My tasks seem to have disappeared
+
+Check the folder you launched Bot67 from. Bot67 reads `data/bot67.txt` relative to that folder, so starting it
+elsewhere can open a different, empty task list. Close the app and launch it from your original folder.
 
 ### Bot67 says a task number is out of range
 
@@ -166,6 +236,7 @@ and the drive has available space, then retry the command.
 ## Credits
 
 - Bot67 was developed from the NUS CS2103T individual-project template and its JavaFX tutorial.
-- The GUI images were selected through Google Images from images represented as reusable. Original source links were
-  not retained; they are acknowledged here rather than presented as original artwork.
+- The GUI images are third-party artwork found through Google Images. Original source and licence details were not
+  retained, so their reuse permissions have not been verified. See the
+  [project credits](https://github.com/yileteoh/ip/blob/master/CONTRIBUTORS.md).
 - OpenAI Codex assisted with implementation, testing, review, and documentation.

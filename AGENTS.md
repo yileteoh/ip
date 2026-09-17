@@ -1,6 +1,9 @@
 # Project context
 
-This repository is a starter template for a greenfield Java project used in an introductory software engineering course in an undergraduate computer science program. Students use it as the starting point for their own projects.
+This repository contains Bot67, a Java 25 desktop task manager developed for the NUS CS2103T individual project.
+It began from the course's Duke starter template and now includes a JavaFX chat interface, a console interface,
+task commands, and local file storage. User documentation lives in `docs/README.md`; developer setup instructions
+live in the root `README.md`.
 
 # Default user context
 

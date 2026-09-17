@@ -3,7 +3,11 @@
 Bot67 is a desktop task manager with a cheerful six-seven personality. It supports todos, deadlines, events,
 task completion, deletion, keyword search, alphabetical sorting, and persistent local storage.
 
-See the [Bot67 User Guide](docs/README.md) for commands and usage details.
+**Using Bot67?** Start with the [Bot67 User Guide](docs/README.md) for installation, a first-task walkthrough,
+commands, and troubleshooting. Download packaged builds from [Releases](https://github.com/yileteoh/ip/releases)
+when available.
+
+**Working on the code?** Follow the developer setup below. Bot67 uses Java 25, Gradle, JavaFX, and JUnit 5.
 
 ## Setting up in IntelliJ IDEA
 
@@ -59,7 +63,7 @@ On macOS with the course SDKMAN setup, run `sdk use java 25.0.3.fx-zulu` before 
 Use either of these methods:
 
 - Open the Gradle tool window and run **Tasks → application → run**.
-- Open IntelliJ's terminal and run `gradlew.bat run` on Windows or `./gradlew run` on macOS/Linux.
+- Open IntelliJ's terminal and run `.\gradlew.bat run` in Windows PowerShell or `./gradlew run` on macOS/Linux.
 
 The Bot67 window should open with the application name, welcome message, command guide, input field, and Send button.
 Try `todo read book`, followed by `list`, to verify that commands and saved data work.
@@ -69,10 +73,12 @@ Try `todo read book`, followed by `list`, to verify that commands and saved data
 Before submitting a change, run the full test and style checks from IntelliJ's terminal:
 
 ```text
-gradlew.bat test checkstyleMain checkstyleTest
+.\gradlew.bat test checkstyleMain checkstyleTest
 ```
 
-On macOS/Linux, replace `gradlew.bat` with `./gradlew`.
+On macOS/Linux, replace `.\gradlew.bat` with `./gradlew`. These run automated logic tests and coding-style checks;
+they do not exercise the GUI. Follow [the UI test plan](test/ui-test-plan.md) for console scenarios and graphical
+checks. The console entry point is `bot67.Bot67`; the normal application entry point is `bot67.Launcher`.
 
 ### Troubleshooting setup
 
@@ -87,15 +93,51 @@ On macOS/Linux, replace `gradlew.bat` with `./gradlew`.
 
 ## Building the JAR
 
-To build the cross-platform fat JAR, run `./gradlew clean shadowJar`. The generated file is
-`build/libs/bot67.jar`.
+Run `.\gradlew.bat clean shadowJar` in Windows PowerShell or `./gradlew clean shadowJar` on macOS/Linux.
+The generated file is `build/libs/bot67.jar`. This fat JAR includes the runtime dependencies, including JavaFX
+libraries for Windows, macOS, and Linux. It still requires Java 25 on the user's computer; verify it on the target
+operating systems and architectures before claiming compatibility.
+
+Copy the JAR into a new, writable folder, open a terminal there, and run:
+
+```text
+java -jar bot67.jar
+```
+
+Try adding, listing, and completing a task, then close and restart the app to check persistence. Its save file is
+`data/bot67.txt` relative to the launch directory. Use a separate folder for smoke tests to avoid altering your
+normal task list.
+
+## Project layout
+
+| Location | Purpose |
+|---|---|
+| `src/main/java/bot67` | Application entry points and command execution |
+| `src/main/java/bot67/gui` | JavaFX window and message controllers |
+| `src/main/java/bot67/parser` | Command and date validation |
+| `src/main/java/bot67/task` | Task types and task-list operations |
+| `src/main/java/bot67/storage` | Save-file loading, validation, and writing |
+| `src/main/java/bot67/ui` | Text responses shared by the console and GUI |
+| `src/main/resources` | FXML layouts, stylesheets, and images |
+| `src/test/java` | JUnit tests |
+| `test/ui-test-plan.md` | Console test cases and graphical checks |
+| `docs/README.md`, `docs/Ui.png` | User Guide and product screenshot |
+
+## Publishing the User Guide
+
+The User Guide source is `docs/README.md`. Keep its commands consistent with the parser and its screenshot at
+`docs/Ui.png` (case-sensitive). For GitHub Pages, select **Settings → Pages → Deploy from a branch**, then choose
+**master** and **/docs**. Publish the reviewed documentation on that branch and check the rendered
+[Bot67 website](https://yileteoh.github.io/ip/) after deployment. Check its tables, links, and screenshot in the
+published page as well as in GitHub's Markdown preview.
+
+Updating documentation on a feature branch alone does not update a Pages site configured to publish from `master`.
 
 ## Credits
 
 - This project began from the NUS CS2103T individual-project template and follows the course's Duke tutorial
   progression.
 - The JavaFX structure was adapted from the JavaFX tutorial supplied with the CS2103T individual-project template.
-- `Background.png`, `Bot67.png`, and `User.png` were selected through Google Images from images represented as
-  reusable. The original source links were not retained; attribution is recorded here transparently rather than
-  claiming the artwork as original.
+- The GUI images are third-party artwork with unverified source and licence details. See
+  [contributors and credits](CONTRIBUTORS.md) for the outstanding attribution work and retained template credits.
 - Development used OpenAI Codex for code review, implementation support, test design, and documentation refinement.
