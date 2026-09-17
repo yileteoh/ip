@@ -348,7 +348,7 @@ public class Bot67 {
             isStorageBlocked = true;
             startupWarning = "Could not load saved tasks. No tasks were loaded; "
                     + "changes are disabled to protect your file."
-                    + "\nCheck " + storage.getSaveFile() + " and restart Bot67.";
+                    + "\nCheck " + storage.getLoadFile() + " and restart Bot67.";
             if (e.getMessage() != null && e.getMessage().startsWith("Invalid saved task at line ")) {
                 startupWarning += "\n" + e.getMessage();
             }

@@ -177,7 +177,7 @@ Now you have 1 task in the list.
 
 ## Test 8: Save tasks after a change
 
-Aim: Verify that adding a task still completes normally while the task is written to `data/duke.txt`.
+Aim: Verify that adding a task still completes normally while the task is written to `data/bot67.txt`.
 
 Input commands:
 
@@ -194,7 +194,7 @@ Six seven! On it. I've added this task:
 You have 1 task in the list. 67!
 ```
 
-Console record: passed. The application created `data/duke.txt` with the saved task.
+Console record: passed. The application created `data/bot67.txt` with the saved task.
 
 ## Test 9: Parse and display Level-8 dates and times
 
@@ -425,7 +425,7 @@ SIX SEVEN! Event start must be before its end.
 ## Test 16: Damaged save file is protected
 
 Aim: Warn on startup, identify the damaged line, and refuse to overwrite the original file.
-Setup: Create `data/duke.txt` with the following exact content before starting Bot67:
+Setup: Create `data/bot67.txt` with the following exact content before starting Bot67:
 
 ```text
 T | 0 | keep this task
@@ -444,19 +444,19 @@ Expected output checkpoints, in order:
 
 ```text
 SIX SEVEN! Could not load saved tasks. No tasks were loaded; changes are disabled to protect your file.
-Check data/duke.txt and restart Bot67.
+Check data/bot67.txt and restart Bot67.
 Invalid saved task at line 2.
-SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
-SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/bot67.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/bot67.txt and restart Bot67.
 Bye. Hope to see you again soon. Six Seven!
 ```
 
-Also verify that the save file's contents are unchanged. On Windows, accept `data\duke.txt` in path messages.
+Also verify that the save file's contents are unchanged. On Windows, accept `data\bot67.txt` in path messages.
 
 ## Test 17: Unreadable save path is protected
 
 Aim: Treat a directory at the save-file path as an error, not an empty first session.
-Setup: Create a directory at `data/duke.txt` before starting Bot67.
+Setup: Create a directory at `data/bot67.txt` before starting Bot67.
 
 Input commands:
 
@@ -469,17 +469,17 @@ Expected output checkpoints, in order:
 
 ```text
 SIX SEVEN! Could not load saved tasks. No tasks were loaded; changes are disabled to protect your file.
-Check data/duke.txt and restart Bot67.
-SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/duke.txt and restart Bot67.
+Check data/bot67.txt and restart Bot67.
+SIX SEVEN! Changes are disabled because saved tasks could not be loaded. Fix data/bot67.txt and restart Bot67.
 Bye. Hope to see you again soon. Six Seven!
 ```
 
-Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\duke.txt` in path messages.
+Also verify that `data/bot67.txt` remains a directory. On Windows, accept `data\bot67.txt` in path messages.
 
 ## Test 18: Save failure leaves the list unchanged
 
 Aim: A failed first save reports a storage error and rolls back the new task.
-Setup: Start Bot67 with no save file. After the welcome message, create a directory at `data/duke.txt`.
+Setup: Start Bot67 with no save file. After the welcome message, create a directory at `data/bot67.txt`.
 
 Input commands:
 
@@ -492,12 +492,12 @@ bye
 Expected output checkpoints, in order:
 
 ```text
-SIX SEVEN! Could not save tasks. Your change was not applied. Check data/duke.txt and its folder permissions, then try again.
+SIX SEVEN! Could not save tasks. Your change was not applied. Check data/bot67.txt and its folder permissions, then try again.
 Six seven! No tasks in the list yet. Let's start small: todo read a book
 Bye. Hope to see you again soon. Six Seven!
 ```
 
-Also verify that `data/duke.txt` remains a directory. On Windows, accept `data\duke.txt` in path messages.
+Also verify that `data/bot67.txt` remains a directory. On Windows, accept `data\bot67.txt` in path messages.
 
 ### A-MoreErrorHandling: graphical checks
 
