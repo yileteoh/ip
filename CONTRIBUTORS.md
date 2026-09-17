@@ -19,9 +19,9 @@ The original template credited these contributors; their attribution is retained
 ## Images
 
 `src/main/resources/images/Background.png`, `Bot67.png`, and `User.png` are third-party images found through
-Google Images. Their original source URLs, authors, and licence details were not retained. Reuse permissions
-therefore remain unverified. These assets are not claimed as original Bot67 artwork. The source and attribution
-details still need to be recovered, or the images replaced with assets whose reuse permissions are known.
+Google Images. The project author confirms that all image owners have granted permission for reuse in Bot67
+and that the images are openly licensed. These assets remain credited to their respective creators and are not
+claimed as original Bot67 artwork. Specific source URLs, creator names, and licence details are not recorded here.
 The screenshot in `docs/Ui.png` also contains these images.
 
 ## AI assistance

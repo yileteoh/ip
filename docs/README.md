@@ -236,7 +236,7 @@ and the drive has available space, then retry the command.
 ## Credits
 
 - Bot67 was developed from the NUS CS2103T individual-project template and its JavaFX tutorial.
-- The GUI images are third-party artwork found through Google Images. Original source and licence details were not
-  retained, so their reuse permissions have not been verified. See the
+- The GUI images are third-party artwork found through Google Images. The project author confirms that their
+  owners have permitted reuse in Bot67 and that the images are openly licensed. See the
   [project credits](https://github.com/yileteoh/ip/blob/master/CONTRIBUTORS.md).
 - OpenAI Codex assisted with implementation, testing, review, and documentation.
